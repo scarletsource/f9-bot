@@ -10,7 +10,9 @@ from langame_api import (
     get_routes,
     get_products,
     get_pc_list,
-    pc_manage
+    pc_manage,
+    get_pc_types,
+    get_pc_linking
 )
 
 from keyboards.menu import main_menu
