@@ -81,24 +81,8 @@ async def show_pcs(callback: CallbackQuery):
 
     data = get_pc_linking()
 
-    pcs = []
-
-    for pc in data["data"]:
-
-        if pc["packets_type_PC"] == pc_type:
-
-            if pc["name"] is not None:
-
-                pcs.append(pc)
-
-    pcs = sorted(
-        pcs,
-        key=lambda x: int(x["name"])
-    )
-
-    await callback.message.edit_text(
-        "🖥 Выберите компьютер:",
-        reply_markup=pc_list_menu(pcs)
+    await callback.message.answer(
+        str(data)[:4000]
     )
 
     await callback.answer()
