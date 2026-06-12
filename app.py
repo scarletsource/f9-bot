@@ -1,3 +1,4 @@
+```python
 import asyncio
 import os
 
@@ -8,22 +9,21 @@ from aiogram.types import Message
 from langame_api import get_clubs, get_routes, get_products
 from keyboards.menu import main_menu
 
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+
 @dp.message(CommandStart())
 async def start(message: Message):
 
-```
-await message.answer(
-    "👋 Добро пожаловать в F9 Кибер Арена\n\n"
-    "Выберите раздел:",
-    reply_markup=main_menu()
-)
-```
+    await message.answer(
+        "👋 Добро пожаловать в F9 Кибер Арена\n\n"
+        "Выберите раздел:",
+        reply_markup=main_menu()
+    )
+
 
 @dp.message(Command("clubs"))
 async def clubs(message: Message):
@@ -44,6 +44,7 @@ async def routes(message: Message):
         str(data)
     )
 
+
 @dp.message(Command("products"))
 async def products(message: Message):
 
@@ -52,10 +53,12 @@ async def products(message: Message):
     await message.answer(
         str(data)[:4000]
     )
-    
+
+
 async def main():
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
