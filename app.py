@@ -35,6 +35,50 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("updatepcs"))
+async def update_pcs(message: Message):
+
+    data = get_pc_linking()
+
+    if not data["status_code"] == 200:
+        await message.answer("❌ Не удалось получить список ПК")
+        return
+
+    import json
+
+    raw = json.loads(data["text"])
+
+    pcs = {}
+
+    for pc in raw["data"]:
+
+        if pc["packets_type_PC"] is None:
+            continue
+
+        pc_type = pc["packets_type_PC"]
+        name = str(pc["name"])
+        uuid = pc["UUID"]
+
+        if pc_type not in pcs:
+            pcs[pc_type] = {}
+
+        pcs[pc_type][name] = uuid
+
+    with open("data/pcs.py", "w", encoding="utf-8") as f:
+
+        f.write("PCS = ")
+        f.write(
+            json.dumps(
+                pcs,
+                ensure_ascii=False,
+                indent=4
+            )
+        )
+
+    await message.answer(
+        "✅ Список ПК обновлен"
+    )
+
 @dp.message(Command("pctypes"))
 async def pctypes(message: Message):
 
