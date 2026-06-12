@@ -118,18 +118,19 @@ async def show_pcs(callback: CallbackQuery):
 
     text = "🖥 Выберите компьютер\n\n"
 
-for pc in pcs:
+    for pc in pcs:
 
-    icon = get_status_icon(pc["UUID"])
+        icon = get_status_icon(
+            pc["UUID"]
+        )
 
-    text += f"{icon} PC-{pc['name']}\n"
+        text += f"{icon} PC-{pc['name']}\n"
 
-await callback.message.edit_text(
-    text,
-    reply_markup=pc_list_menu(pcs)
-)
+    await callback.message.edit_text(
+        text,
+        reply_markup=pc_list_menu(pcs)
+    )
 
-    
     await callback.answer()
     
 @dp.callback_query(lambda c: c.data == "back_main")
