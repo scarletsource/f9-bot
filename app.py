@@ -210,30 +210,42 @@ async def confirm_action(callback: CallbackQuery):
             CURRENT_UUID,
             "tech"
         )
+        print(CURRENT_UUID)
+        print(get_status(CURRENT_UUID))
 
     elif CURRENT_COMMAND == "unlock":
         set_status(
             CURRENT_UUID,
             "manual_unlock"
         )
+        print(CURRENT_UUID)
+        print(get_status(CURRENT_UUID))
 
     elif CURRENT_COMMAND == "power_off":
         set_status(
             CURRENT_UUID,
             "poweroff"
         )
+        print(CURRENT_UUID)
+        print(get_status(CURRENT_UUID))
 
     elif CURRENT_COMMAND == "power_on":
         set_status(
             CURRENT_UUID,
             "free"
         )
+        print(CURRENT_UUID)
+        print(get_status(CURRENT_UUID))
 
+    
     elif CURRENT_COMMAND == "reboot":
         set_status(
             CURRENT_UUID,
             "busy"
         )
+        print(CURRENT_UUID)
+        print(get_status(CURRENT_UUID))
+
 
     data = pc_manage(
         CURRENT_COMMAND,
