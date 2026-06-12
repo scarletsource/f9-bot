@@ -14,16 +14,14 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-
 @dp.message(CommandStart())
 async def start(message: Message):
 
-    await message.answer(
-        "👋 Добро пожаловать в F9 Кибер Арена\n\n"
-        "Выберите раздел:",
-        reply_markup=main_menu
-    )
-
+await message.answer(
+    "👋 Добро пожаловать в F9 Кибер Арена\n\n"
+    "Выберите раздел:",
+    reply_markup=main_menu()
+)
 
 @dp.message(Command("clubs"))
 async def clubs(message: Message):
