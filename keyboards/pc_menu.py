@@ -33,3 +33,22 @@ def pc_menu():
     builder.adjust(2, 2, 1)
 
     return builder.as_markup()
+
+
+def confirm_restart_menu():
+
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text="✅ Да, перезагрузить",
+        callback_data="confirm_restart"
+    )
+
+    builder.button(
+        text="❌ Отмена",
+        callback_data="pc"
+    )
+
+    builder.adjust(1)
+
+    return builder.as_markup()
