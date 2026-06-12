@@ -9,7 +9,8 @@ from langame_api import (
     get_clubs,
     get_routes,
     get_products,
-    get_pc_list
+    get_pc_list,
+    pc_manage
 )
 
 from keyboards.menu import main_menu
