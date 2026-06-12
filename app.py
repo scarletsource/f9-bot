@@ -101,7 +101,9 @@ async def show_pcs(callback: CallbackQuery):
         reply_markup=pc_list_menu(pcs)
     )
 
+    
     await callback.answer()
+    
 @dp.callback_query(lambda c: c.data == "back_main")
 async def back_main(callback: CallbackQuery):
 
@@ -113,7 +115,18 @@ async def back_main(callback: CallbackQuery):
 
     await callback.answer()
 
+@dp.callback_query(lambda c: c.data.startswith("pcid_"))
+async def pc_selected(callback: CallbackQuery):
 
+    uuid = callback.data.replace("pcid_", "")
+
+    await callback.message.edit_text(
+        "Выберите действие:",
+        reply_markup=pc_actions_menu(uuid)
+    )
+
+    await callback.answer()
+    
 @dp.callback_query(lambda c: c.data == "pc_restart")
 async def pc_restart(callback: CallbackQuery):
 
