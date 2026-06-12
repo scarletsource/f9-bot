@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
-from langame_api import get_clubs, get_routes
+from langame_api import get_clubs, get_routes, get_products
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
