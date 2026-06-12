@@ -4,6 +4,8 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from aiogram.filters import Command
+from langame_api import get_clubs
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -16,7 +18,14 @@ async def start(message: Message):
     await message.answer(
         "👋 Привет!\n\nF9 Club Bot успешно запущен!"
     )
+@dp.message(Command("clubs"))
+async def clubs(message: Message):
 
+    data = get_clubs()
+
+    await message.answer(
+        str(data)
+    )
 
 async def main():
     await dp.start_polling(bot)
