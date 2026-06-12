@@ -14,7 +14,8 @@ from langame_api import (
 )
 
 from keyboards.menu import main_menu
-from keyboards.pc_menu import pc_menu
+from keyboards.pc_menu import pc_menu, confirm_restart_menu
+
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -58,13 +59,12 @@ async def back_main(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "pc_restart")
 async def pc_restart(callback: CallbackQuery):
 
-    data = pc_manage("reboot")
+    await callback.message.edit_text(
+        "⚠️ Вы уверены, что хотите перезагрузить все свободные ПК?",
+        reply_markup=confirm_restart_menu()
+    )
 
     await callback.answer()
-
-    await callback.message.answer(
-        str(data)
-    )
     
 @dp.callback_query(lambda c: c.data == "pc_poweron")
 async def pc_poweron(callback: CallbackQuery):
