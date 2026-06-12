@@ -25,6 +25,15 @@ def get_routes():
         f"{BASE_URL}/routes",
         headers=headers
     )
+    
+def get_products():
+
+    response = requests.get(
+        f"{BASE_URL}/products/list",
+        headers=headers
+    )
+
+    return response.json()
 
     return {
         "status_code": response.status_code,
