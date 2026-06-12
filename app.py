@@ -16,6 +16,8 @@ from langame_api import (
     get_pc_linking
 )
 
+from keyboards.confirm_menu import confirm_menu
+from keyboards.result_menu import result_menu
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu, confirm_restart_menu
 from keyboards.pc_types import pc_types_menu
