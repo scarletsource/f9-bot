@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 
 from langame_api import get_clubs, get_routes, get_products
+from langame_api import get_pc_list
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu
 
