@@ -68,6 +68,23 @@ async def pclinking(message: Message):
         file,
         caption="Список ПК"
     )
+
+@dp.message(Command("routes"))
+async def routes(message: Message):
+
+    data = get_routes()
+
+    import json
+
+    with open("routes.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    file = FSInputFile("routes.json")
+
+    await message.answer_document(
+        file,
+        caption="Список роутов"
+    )
     
 @dp.callback_query(lambda c: c.data == "pc")
 async def open_pc_menu(callback: CallbackQuery):
