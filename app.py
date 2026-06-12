@@ -127,61 +127,44 @@ async def pc_selected(callback: CallbackQuery):
 
     await callback.answer()
     
-@dp.callback_query(lambda c: c.data == "pc_restart")
-async def pc_restart(callback: CallbackQuery):
 
-    await callback.message.edit_text(
-        "⚠️ Вы уверены, что хотите перезагрузить все свободные ПК?",
-        reply_markup=confirm_restart_menu()
-    )
-
-    await callback.answer()
-
-@dp.callback_query(lambda c: c.data == "confirm_restart")
-async def confirm_restart(callback: CallbackQuery):
-
-    data = pc_manage("reboot")
-
-    await callback.message.edit_text(
-        "✅ Команда на перезагрузку отправлена.\n\n"
-        f"{data}"
-    )
-
-    await callback.answer()
-    
-@dp.callback_query(lambda c: c.data == "pc_poweron")
-async def pc_poweron(callback: CallbackQuery):
-
-    await callback.answer()
-
-    await callback.message.answer(
-        "⚡ Функция включения ПК находится в разработке."
-    )
-
-
-@dp.callback_query(lambda c: c.data == "pc_lock")
-async def pc_lock(callback: CallbackQuery):
-
-    await callback.answer()
-
-    await callback.message.answer(
-        "🔒 Функция блокировки ПК находится в разработке."
-    )
-
-
-@dp.callback_query(lambda c: c.data == "pc_shutdown")
-async def pc_shutdown(callback: CallbackQuery):
-
-    await callback.answer()
-
-    await callback.message.answer(
-        "⛔ Функция выключения ПК находится в разработке."
-    )
-
-
-async def main():
-    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+@dp.callback_query(
+    lambda c:
+    c.data.startswith("reboot_")
+    or c.data.startswith("poweron_")
+    or c.data.startswith("lock_")
+    or c.data.startswith("unlock_")
+    or c.data.startswith("poweroff_")
+    or c.data.startswith("techstart_")
+    or c.data.startswith("techstop_")
+)
+async def pc_action(callback: CallbackQuery):
+
+    action, uuid = callback.data.split("_", 1)
+
+    commands = {
+        "reboot": "reboot",
+        "poweron": "power_on",
+        "lock": "lock",
+        "unlock": "unlock",
+        "poweroff": "power_off",
+        "techstart": "tech_start",
+        "techstop": "tech_stop"
+    }
+
+    data = pc_manage(
+        commands[action],
+        uuid
+    )
+
+    await callback.message.edit_text(
+        "✅ Команда отправлена.\n\n"
+        f"{data}"
+    )
+
+    await callback.answer()
