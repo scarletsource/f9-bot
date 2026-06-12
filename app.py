@@ -58,14 +58,14 @@ async def back_main(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "pc_restart")
 async def pc_restart(callback: CallbackQuery):
 
-    data = get_pc_list()
+    data = pc_manage("reboot")
 
     await callback.answer()
 
     await callback.message.answer(
-        str(data)[:4000]
+        str(data)
     )
-
+    
 @dp.callback_query(lambda c: c.data == "pc_poweron")
 async def pc_poweron(callback: CallbackQuery):
 
