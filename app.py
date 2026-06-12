@@ -18,10 +18,20 @@ async def start(message: Message):
     await message.answer(
         "👋 Привет!\n\nF9 Club Bot успешно запущен!"
     )
+    
 @dp.message(Command("clubs"))
 async def clubs(message: Message):
 
     data = get_clubs()
+
+    await message.answer(
+        str(data)
+    )
+    
+@dp.message(Command("routes"))
+async def routes(message: Message):
+
+    data = get_routes()
 
     await message.answer(
         str(data)
