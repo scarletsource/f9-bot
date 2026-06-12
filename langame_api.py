@@ -15,5 +15,13 @@ def get_clubs():
         f"{BASE_URL}/clubs/list",
         headers=headers
     )
+    
+def get_routes():
 
+    response = requests.get(
+        f"{BASE_URL}/routes",
+        headers=headers
+    )
+
+    return response.json()
     return response.json()
