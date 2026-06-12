@@ -6,6 +6,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
 from langame_api import get_clubs, get_routes, get_products
+from keyboards.menu import main_menu
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -16,12 +17,11 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message):
+
     await message.answer(
-        "👋 Привет!\n\n"
-        "F9 Club Bot успешно запущен!\n\n"
-        "Доступные команды:\n"
-        "/clubs - список клубов\n"
-        "/routes - доступные методы API"
+        "👋 Добро пожаловать в F9 Кибер Арена\n\n"
+        "Выберите раздел:",
+        reply_markup=main_menu
     )
 
 
