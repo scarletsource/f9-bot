@@ -145,16 +145,18 @@ async def pc_selected(callback: CallbackQuery):
 
     global CURRENT_UUID
 
-    CURRENT_UUID = callback.data.replace("pcid_", "")
+    CURRENT_UUID = callback.data.replace(
+        "pcid_",
+        ""
+    )
 
     await callback.message.edit_text(
-    "🖥 Выберите компьютер:",
-    reply_markup=pc_list_menu(pcs)
-)
+        "🖥 Выберите действие:",
+        reply_markup=pc_actions_menu()
+    )
 
     await callback.answer()
-
-
+    
 @dp.callback_query(
     lambda c:
     c.data in [
