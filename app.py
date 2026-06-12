@@ -20,7 +20,7 @@ from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu, confirm_restart_menu
 from keyboards.pc_types import pc_types_menu
 from keyboards.pc_list import pc_list_menu
-
+from keyboards.pc_actions import pc_actions_menu
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
