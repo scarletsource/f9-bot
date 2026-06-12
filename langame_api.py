@@ -46,4 +46,7 @@ def get_pc_list():
         headers=headers
     )
 
-    return response.json()
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
