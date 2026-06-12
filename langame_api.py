@@ -41,3 +41,12 @@ def get_products():
     }
 
     return response.json()
+
+def get_pc_list():
+
+    response = requests.get(
+        f"{BASE_URL}/pc/list",
+        headers=headers
+    )
+
+    return response.json()
