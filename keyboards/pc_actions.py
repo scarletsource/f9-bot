@@ -1,43 +1,43 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def pc_actions_menu(uuid):
+def pc_actions_menu():
 
     builder = InlineKeyboardBuilder()
 
     builder.button(
         text="🔄 Перезагрузить",
-        callback_data=f"reboot_{uuid}"
+        callback_data="reboot"
     )
 
     builder.button(
         text="⚡ Включить",
-        callback_data=f"poweron_{uuid}"
+        callback_data="poweron"
     )
 
     builder.button(
         text="🔒 Заблокировать",
-        callback_data=f"lock_{uuid}"
+        callback_data="lock"
     )
 
     builder.button(
         text="🔓 Разблокировать",
-        callback_data=f"unlock_{uuid}"
+        callback_data="unlock"
     )
 
     builder.button(
         text="⛔ Выключить",
-        callback_data=f"poweroff_{uuid}"
+        callback_data="poweroff"
     )
 
     builder.button(
         text="🛠 Тех старт",
-        callback_data=f"techstart_{uuid}"
+        callback_data="techstart"
     )
 
     builder.button(
         text="🛠 Тех стоп",
-        callback_data=f"techstop_{uuid}"
+        callback_data="techstop"
     )
 
     builder.button(
