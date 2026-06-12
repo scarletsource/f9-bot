@@ -51,12 +51,12 @@ def get_pc_list():
         "text": response.text
     }
 
-def pc_manage(command, pc_type="free"):
+def pc_manage(command, uuids):
 
     payload = {
         "club_id": 1,
         "command": command,
-        "type": pc_type
+        "uuids": [uuids]
     }
 
     response = requests.post(
@@ -65,10 +65,7 @@ def pc_manage(command, pc_type="free"):
         json=payload
     )
 
-    return {
-        "status_code": response.status_code,
-        "text": response.text
-    }
+    return response.json()
 
 def get_pc_types():
 
