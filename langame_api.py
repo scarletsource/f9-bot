@@ -50,3 +50,22 @@ def get_pc_list():
         "status_code": response.status_code,
         "text": response.text
     }
+
+def pc_manage(command, pc_type="free"):
+
+    payload = {
+        "club_id": 1,
+        "command": command,
+        "type": pc_type
+    }
+
+    response = requests.post(
+        f"{BASE_URL}/pc/manage",
+        headers=headers,
+        json=payload
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
