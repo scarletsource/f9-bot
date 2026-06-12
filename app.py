@@ -5,6 +5,13 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
+from langame_api import (
+    get_clubs,
+    get_routes,
+    get_products,
+    get_pc_list
+)
+
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu
 
@@ -50,12 +57,13 @@ async def back_main(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "pc_restart")
 async def pc_restart(callback: CallbackQuery):
 
+    data = get_pc_list()
+
     await callback.answer()
 
     await callback.message.answer(
-        "🔄 Функция перезагрузки ПК находится в разработке."
+        str(data)[:4000]
     )
-
 
 @dp.callback_query(lambda c: c.data == "pc_poweron")
 async def pc_poweron(callback: CallbackQuery):
