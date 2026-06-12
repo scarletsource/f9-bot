@@ -4,6 +4,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
+from aiogram.types import FSInputFile
 
 from langame_api import (
     get_clubs,
@@ -54,8 +55,11 @@ async def pclinking(message: Message):
     with open("pcs.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-    await message.answer(
-        "✅ Файл pcs.json сохранен"
+    file = FSInputFile("pcs.json")
+
+    await message.answer_document(
+        file,
+        caption="Список ПК"
     )
     
 @dp.callback_query(lambda c: c.data == "pc")
