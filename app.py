@@ -118,11 +118,13 @@ async def back_main(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data.startswith("pcid_"))
 async def pc_selected(callback: CallbackQuery):
 
-    uuid = callback.data.replace("pcid_", "")
+    global CURRENT_UUID
+
+    CURRENT_UUID = callback.data.replace("pcid_", "")
 
     await callback.message.edit_text(
         "🖥 Выберите действие:",
-        reply_markup=pc_actions_menu(uuid)
+        reply_markup=pc_actions_menu()
     )
 
     await callback.answer()
