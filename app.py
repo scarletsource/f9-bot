@@ -6,7 +6,6 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
 
-
 from langame_api import (
     get_clubs,
     get_routes,
@@ -20,6 +19,7 @@ from langame_api import (
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu, confirm_restart_menu
 from keyboards.pc_types import pc_types_menu
+from keyboards.pc_list import pc_list_menu
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
