@@ -121,17 +121,12 @@ async def pc_selected(callback: CallbackQuery):
     uuid = callback.data.replace("pcid_", "")
 
     await callback.message.edit_text(
-        "Выберите действие:",
+        "🖥 Выберите действие:",
         reply_markup=pc_actions_menu(uuid)
     )
 
     await callback.answer()
-    
 
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
 
 @dp.callback_query(
     lambda c:
@@ -163,8 +158,15 @@ async def pc_action(callback: CallbackQuery):
     )
 
     await callback.message.edit_text(
-        "✅ Команда отправлена.\n\n"
-        f"{data}"
+        f"✅ Команда отправлена.\n\n{data}"
     )
 
     await callback.answer()
+
+
+async def main():
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
