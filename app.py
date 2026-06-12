@@ -3,12 +3,11 @@ import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
 from langame_api import get_clubs, get_routes, get_products
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu
-from aiogram.types import CallbackQuery
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -56,13 +55,6 @@ async def products(message: Message):
     )
 
 
-async def main():
-    await dp.start_polling(bot)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-
 @dp.callback_query(lambda c: c.data == "pc")
 async def open_pc_menu(callback: CallbackQuery):
 
@@ -70,3 +62,13 @@ async def open_pc_menu(callback: CallbackQuery):
         "🖥 Управление компьютерами",
         reply_markup=pc_menu()
     )
+
+    await callback.answer()
+
+
+async def main():
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
