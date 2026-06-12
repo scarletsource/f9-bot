@@ -69,3 +69,28 @@ def pc_manage(command, pc_type="free"):
         "status_code": response.status_code,
         "text": response.text
     }
+
+def get_pc_types():
+
+    response = requests.get(
+        f"{BASE_URL}/global/types_of_pc_in_clubs/list",
+        headers=headers
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
+
+
+def get_pc_linking():
+
+    response = requests.get(
+        f"{BASE_URL}/global/linking_pc_by_type/list",
+        headers=headers
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
