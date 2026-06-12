@@ -49,8 +49,13 @@ async def pclinking(message: Message):
 
     data = get_pc_linking()
 
+    import json
+
+    with open("pcs.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
     await message.answer(
-        str(data)[:4000]
+        "✅ Файл pcs.json сохранен"
     )
     
 @dp.callback_query(lambda c: c.data == "pc")
