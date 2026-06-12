@@ -132,17 +132,17 @@ async def pc_selected(callback: CallbackQuery):
 
 @dp.callback_query(
     lambda c:
-    c.data.startswith("reboot_")
-    or c.data.startswith("poweron_")
-    or c.data.startswith("lock_")
-    or c.data.startswith("unlock_")
-    or c.data.startswith("poweroff_")
-    or c.data.startswith("techstart_")
-    or c.data.startswith("techstop_")
+    c.data in [
+        "reboot",
+        "poweron",
+        "lock",
+        "unlock",
+        "poweroff",
+        "techstart",
+        "techstop"
+    ]
 )
 async def pc_action(callback: CallbackQuery):
-
-    action, uuid = callback.data.split("_", 1)
 
     commands = {
         "reboot": "reboot",
@@ -155,12 +155,12 @@ async def pc_action(callback: CallbackQuery):
     }
 
     data = pc_manage(
-        commands[action],
-        uuid
+        commands[callback.data],
+        CURRENT_UUID
     )
 
     await callback.message.edit_text(
-        f"✅ Команда отправлена.\n\n{data}"
+        f"✅ Команда отправлена\n\n{data}"
     )
 
     await callback.answer()
