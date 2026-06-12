@@ -26,7 +26,10 @@ def get_routes():
         headers=headers
     )
 
-    return response.json()
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
 
 
 def get_products():
