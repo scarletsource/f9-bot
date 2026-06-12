@@ -65,6 +65,18 @@ async def pc_restart(callback: CallbackQuery):
     )
 
     await callback.answer()
+
+@dp.callback_query(lambda c: c.data == "confirm_restart")
+async def confirm_restart(callback: CallbackQuery):
+
+    data = pc_manage("reboot")
+
+    await callback.message.edit_text(
+        "✅ Команда на перезагрузку отправлена.\n\n"
+        f"{data}"
+    )
+
+    await callback.answer()
     
 @dp.callback_query(lambda c: c.data == "pc_poweron")
 async def pc_poweron(callback: CallbackQuery):
