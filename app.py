@@ -25,7 +25,15 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("pcs"))
+async def pcs(message: Message):
 
+    data = get_pc_list()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+    
 @dp.message(Command("clubs"))
 async def clubs(message: Message):
 
