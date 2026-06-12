@@ -16,6 +16,12 @@ from langame_api import (
     get_pc_linking
 )
 
+from utils.pc_status import (
+    set_status,
+    get_status_icon,
+    get_status_name
+)
+
 from keyboards.confirm_menu import confirm_menu
 from keyboards.result_menu import result_menu
 from keyboards.menu import main_menu
@@ -110,10 +116,18 @@ async def show_pcs(callback: CallbackQuery):
         key=lambda x: int(x["name"])
     )
 
-    await callback.message.edit_text(
-        "🖥 Выберите компьютер:",
-        reply_markup=pc_list_menu(pcs)
-    )
+    text = "🖥 Выберите компьютер\n\n"
+
+for pc in pcs:
+
+    icon = get_status_icon(pc["UUID"])
+
+    text += f"{icon} PC-{pc['name']}\n"
+
+await callback.message.edit_text(
+    text,
+    reply_markup=pc_list_menu(pcs)
+)
 
     
     await callback.answer()
