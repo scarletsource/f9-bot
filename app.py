@@ -18,6 +18,7 @@ from langame_api import (
 
 from utils.pc_status import (
     set_status,
+    get_status,
     get_status_icon,
     get_status_name
 )
@@ -147,9 +148,9 @@ async def pc_selected(callback: CallbackQuery):
     CURRENT_UUID = callback.data.replace("pcid_", "")
 
     await callback.message.edit_text(
-        "🖥 Выберите действие:",
-        reply_markup=pc_actions_menu()
-    )
+    "🖥 Выберите компьютер:",
+    reply_markup=pc_list_menu(pcs)
+)
 
     await callback.answer()
 
