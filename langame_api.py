@@ -26,4 +26,9 @@ def get_routes():
         headers=headers
     )
 
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
+
     return response.json()
