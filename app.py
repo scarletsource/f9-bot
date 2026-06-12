@@ -209,6 +209,36 @@ async def pc_action(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data == "confirm_action")
 async def confirm_action(callback: CallbackQuery):
 
+    if CURRENT_COMMAND == "tech_start":
+        set_status(
+            CURRENT_UUID,
+            "tech"
+        )
+
+    elif CURRENT_COMMAND == "unlock":
+        set_status(
+            CURRENT_UUID,
+            "manual_unlock"
+        )
+
+    elif CURRENT_COMMAND == "power_off":
+        set_status(
+            CURRENT_UUID,
+            "poweroff"
+        )
+
+    elif CURRENT_COMMAND == "power_on":
+        set_status(
+            CURRENT_UUID,
+            "free"
+        )
+
+    elif CURRENT_COMMAND == "reboot":
+        set_status(
+            CURRENT_UUID,
+            "busy"
+        )
+
     data = pc_manage(
         CURRENT_COMMAND,
         CURRENT_UUID
