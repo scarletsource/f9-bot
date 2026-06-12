@@ -68,8 +68,8 @@ async def pclinking(message: Message):
 async def open_pc_menu(callback: CallbackQuery):
 
     await callback.message.edit_text(
-        "🖥 Управление компьютерами",
-        reply_markup=pc_menu()
+        "🖥 Выберите зону:",
+        reply_markup=pc_types_menu()
     )
 
     await callback.answer()
