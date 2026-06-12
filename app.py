@@ -44,7 +44,15 @@ async def routes(message: Message):
         str(data)
     )
 
+@dp.message(Command("products"))
+async def products(message: Message):
 
+    data = get_products()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+    
 async def main():
     await dp.start_polling(bot)
 
