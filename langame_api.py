@@ -1,5 +1,5 @@
-import requests
 import os
+import requests
 
 BASE_URL = os.getenv("LANGAME_URL")
 API_KEY = os.getenv("LANGAME_API_KEY")
@@ -25,7 +25,10 @@ def get_routes():
         f"{BASE_URL}/routes",
         headers=headers
     )
-    
+
+    return response.json()
+
+
 def get_products():
 
     response = requests.get(
@@ -35,12 +38,6 @@ def get_products():
 
     return response.json()
 
-    return {
-        "status_code": response.status_code,
-        "text": response.text
-    }
-
-    return response.json()
 
 def get_pc_list():
 
