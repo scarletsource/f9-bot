@@ -23,7 +23,9 @@ def get_routes():
 
     response = requests.get(
         f"{BASE_URL}/routes",
-        headers=headers
+        params={
+            "api_key": API_KEY
+        }
     )
 
     return {
