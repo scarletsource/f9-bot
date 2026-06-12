@@ -2,11 +2,9 @@ import asyncio
 import os
 
 from aiogram import Bot, Dispatcher
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
-from langame_api import get_clubs, get_routes, get_products
-from langame_api import get_pc_list
 from keyboards.menu import main_menu
 from keyboards.pc_menu import pc_menu
 
@@ -25,44 +23,6 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
-@dp.message(Command("pcs"))
-async def pcs(message: Message):
-
-    data = get_pc_list()
-
-    await message.answer(
-        str(data)[:4000]
-    )
-    
-@dp.message(Command("clubs"))
-async def clubs(message: Message):
-
-    data = get_clubs()
-
-    await message.answer(
-        str(data)
-    )
-
-
-@dp.message(Command("routes"))
-async def routes(message: Message):
-
-    data = get_routes()
-
-    await message.answer(
-        str(data)
-    )
-
-
-@dp.message(Command("products"))
-async def products(message: Message):
-
-    data = get_products()
-
-    await message.answer(
-        str(data)[:4000]
-    )
-
 
 @dp.callback_query(lambda c: c.data == "pc")
 async def open_pc_menu(callback: CallbackQuery):
@@ -73,6 +33,58 @@ async def open_pc_menu(callback: CallbackQuery):
     )
 
     await callback.answer()
+
+
+@dp.callback_query(lambda c: c.data == "back_main")
+async def back_main(callback: CallbackQuery):
+
+    await callback.message.edit_text(
+        "👋 Добро пожаловать в F9 Кибер Арена\n\n"
+        "Выберите раздел:",
+        reply_markup=main_menu()
+    )
+
+    await callback.answer()
+
+
+@dp.callback_query(lambda c: c.data == "pc_restart")
+async def pc_restart(callback: CallbackQuery):
+
+    await callback.answer()
+
+    await callback.message.answer(
+        "🔄 Функция перезагрузки ПК находится в разработке."
+    )
+
+
+@dp.callback_query(lambda c: c.data == "pc_poweron")
+async def pc_poweron(callback: CallbackQuery):
+
+    await callback.answer()
+
+    await callback.message.answer(
+        "⚡ Функция включения ПК находится в разработке."
+    )
+
+
+@dp.callback_query(lambda c: c.data == "pc_lock")
+async def pc_lock(callback: CallbackQuery):
+
+    await callback.answer()
+
+    await callback.message.answer(
+        "🔒 Функция блокировки ПК находится в разработке."
+    )
+
+
+@dp.callback_query(lambda c: c.data == "pc_shutdown")
+async def pc_shutdown(callback: CallbackQuery):
+
+    await callback.answer()
+
+    await callback.message.answer(
+        "⛔ Функция выключения ПК находится в разработке."
+    )
 
 
 async def main():
