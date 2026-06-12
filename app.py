@@ -34,7 +34,25 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("pctypes"))
+async def pctypes(message: Message):
 
+    data = get_pc_types()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+
+
+@dp.message(Command("pclinking"))
+async def pclinking(message: Message):
+
+    data = get_pc_linking()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+    
 @dp.callback_query(lambda c: c.data == "pc")
 async def open_pc_menu(callback: CallbackQuery):
 
