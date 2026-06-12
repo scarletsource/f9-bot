@@ -51,12 +51,12 @@ def get_pc_list():
         "text": response.text
     }
 
-def pc_manage(command, uuids):
+def pc_manage(command, uuid):
 
     payload = {
         "club_id": 1,
         "command": command,
-        "uuids": [uuids]
+        "uuids": [uuid]
     }
 
     response = requests.post(
