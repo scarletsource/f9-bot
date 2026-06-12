@@ -7,6 +7,8 @@ from aiogram.types import Message
 
 from langame_api import get_clubs, get_routes, get_products
 from keyboards.menu import main_menu
+from keyboards.pc_menu import pc_menu
+from aiogram.types import CallbackQuery
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -60,3 +62,11 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+@dp.callback_query(lambda c: c.data == "pc")
+async def open_pc_menu(callback: CallbackQuery):
+
+    await callback.message.edit_text(
+        "🖥 Управление компьютерами",
+        reply_markup=pc_menu()
+    )
