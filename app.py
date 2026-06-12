@@ -25,6 +25,9 @@ from keyboards.pc_list import pc_list_menu
 from keyboards.pc_actions import pc_actions_menu
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+CURRENT_UUID = ""
+CURRENT_COMMAND = ""
+CURRENT_ACTION_NAME = ""
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -146,6 +149,9 @@ async def pc_selected(callback: CallbackQuery):
 )
 async def pc_action(callback: CallbackQuery):
 
+    global CURRENT_COMMAND
+    global CURRENT_ACTION_NAME
+
     commands = {
         "reboot": "reboot",
         "poweron": "power_on",
@@ -156,13 +162,50 @@ async def pc_action(callback: CallbackQuery):
         "techstop": "tech_stop"
     }
 
+    names = {
+        "reboot": "🔄 Перезагрузка",
+        "poweron": "⚡ Включение",
+        "lock": "🔒 Блокировка",
+        "unlock": "🔓 Разблокировка",
+        "poweroff": "⛔ Выключение",
+        "techstart": "🛠 Тех старт",
+        "techstop": "🛠 Тех стоп"
+    }
+
+    CURRENT_COMMAND = commands[callback.data]
+    CURRENT_ACTION_NAME = names[callback.data]
+
+    await callback.message.edit_text(
+        f"⚠ Подтвердите действие\n\n"
+        f"{CURRENT_ACTION_NAME}",
+        reply_markup=confirm_menu()
+    )
+
+    await callback.answer()
+
+@dp.callback_query(lambda c: c.data == "confirm_action")
+async def confirm_action(callback: CallbackQuery):
+
     data = pc_manage(
-        commands[callback.data],
+        CURRENT_COMMAND,
         CURRENT_UUID
     )
 
     await callback.message.edit_text(
-        f"✅ Команда отправлена\n\n{data}"
+        f"✅ Команда успешно отправлена\n\n"
+        f"Действие:\n{CURRENT_ACTION_NAME}",
+        reply_markup=result_menu()
+    )
+
+    await callback.answer()
+
+
+@dp.callback_query(lambda c: c.data == "cancel_action")
+async def cancel_action(callback: CallbackQuery):
+
+    await callback.message.edit_text(
+        "❌ Действие отменено",
+        reply_markup=result_menu()
     )
 
     await callback.answer()
