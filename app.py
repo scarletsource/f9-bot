@@ -63,6 +63,7 @@ async def start(message: Message):
         "Выберите раздел:",
         reply_markup=main_menu()
     )
+    
 @dp.message(Command("pclist"))
 async def pclist(message: Message):
 
@@ -99,13 +100,36 @@ async def pclinking(message: Message):
         caption="Список ПК"
     )
 
-@dp.message(Command("routes"))
-async def routes(message: Message):
+@dp.message(Command("routesfind"))
+async def routesfind(message: Message):
 
     data = get_routes()
 
+    text = data["text"]
+
+    words = [
+        "pc",
+        "session",
+        "guest",
+        "client",
+        "computer",
+        "status"
+    ]
+
+    result = ""
+
+    for line in text.split("\n"):
+
+        for word in words:
+
+            if word.lower() in line.lower():
+
+                result += line + "\n"
+
+                break
+
     await message.answer(
-        str(data)[:4000]
+        result[:4000]
     )
     
 @dp.callback_query(lambda c: c.data == "pc")
