@@ -35,6 +35,10 @@ from utils.club_history import (
     get_club_history
 )
 
+from utils.pc_status import (
+    set_status
+)
+
 from keyboards.confirm_menu import confirm_menu
 from keyboards.result_menu import result_menu
 from keyboards.menu import main_menu
@@ -63,45 +67,6 @@ async def start(message: Message):
         "Выберите раздел:",
         reply_markup=main_menu()
     )
-
-@dp.message(Command("testpc"))
-async def testpc(message: Message):
-
-    data = get_pc_linking()
-
-    for pc in data["data"]:
-
-        if pc["UUID"] == "8D86A6F1-E7A8-4719-A6A3-047C16E99DFA":
-
-            await message.answer(
-                str(pc)
-            )
-
-            break
-
-@dp.message(Command("sessions"))
-async def sessions(message: Message):
-
-    data = get_guest_sessions()
-
-    import json
-
-    with open(
-        "sessions.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
-
-    file = FSInputFile("sessions.json")
-
-    await message.answer_document(file)
 
 @dp.message(Command("adminconsole"))
 async def adminconsole(message: Message):
@@ -158,38 +123,6 @@ async def pclinking(message: Message):
         caption="Список ПК"
     )
 
-@dp.message(Command("routesfind"))
-async def routesfind(message: Message):
-
-    data = get_routes()
-
-    text = data["text"]
-
-    words = [
-        "pc",
-        "session",
-        "guest",
-        "client",
-        "computer",
-        "status"
-    ]
-
-    result = ""
-
-    for line in text.split("\n"):
-
-        for word in words:
-
-            if word.lower() in line.lower():
-
-                result += line + "\n"
-
-                break
-
-    await message.answer(
-        result[:4000]
-    )
-    
 @dp.callback_query(lambda c: c.data == "pc")
 async def open_pc_menu(callback: CallbackQuery):
 
@@ -378,22 +311,22 @@ async def confirm_action(callback: CallbackQuery):
             pc_name = pc["name"]
 
             break
-
+        
     club_names = {
-        "reboot": "🔄 ПК-{:02} перезагружен",
-        "poweron": "⚡ ПК-{:02} включен",
-        "lock": "🔒 ПК-{:02} заблокирован",
-        "unlock": "🔓 ПК-{:02} разблокирован",
-        "poweroff": "⛔ ПК-{:02} выключен",
-        "techstart": "🛠 ПК-{:02} переведен в техрежим",
-        "techstop": "🟢 ПК-{:02} выведен из техрежима"
-    }
+    "reboot": "🔄 ПК-{:02} перезагружен",
+    "poweron": "⚡ ПК-{:02} включен",
+    "lock": "🔒 ПК-{:02} заблокирован",
+    "unlock": "🔓 ПК-{:02} разблокирован",
+    "poweroff": "⛔ ПК-{:02} выключен",
+    "techstart": "🛠 ПК-{:02} переведен в техрежим",
+    "techstop": "🟢 ПК-{:02} выведен из техрежима"
+}
 
-    add_club_history(
-        club_names[action].format(
-            int(pc_name)
-        )
+add_club_history(
+    club_names[action].format(
+        int(pc_name)
     )
+)
 
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
