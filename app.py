@@ -143,6 +143,13 @@ async def pc_selected(callback: CallbackQuery):
     data = get_pc_linking()
 
     pc_name = "Неизвестно"
+    zone_name = "Неизвестно"
+
+    zones = {
+        1: "🟢 Standard",
+        2: "🟣 VIP",
+        3: "🔵 Bootcamp"
+    }
 
     for pc in data["data"]:
 
@@ -150,13 +157,32 @@ async def pc_selected(callback: CallbackQuery):
 
             pc_name = pc["name"]
 
+            zone_name = zones.get(
+                pc["packets_type_PC"],
+                "⚪ Неизвестно"
+            )
+
             break
 
     text = (
-        f"🖥 <b>ПК-{pc_name}</b>\n\n"
-        f"Статус: {get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
-        "━━━━━━━━━━━━━━\n\n"
-        "Выберите действие:"
+        f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
+
+        f"📊 Статус\n"
+        f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
+
+        f"📍 Зона\n"
+        f"{zone_name}\n\n"
+
+        f"👤 Пользователь\n"
+        f"Свободен\n\n"
+
+        f"🕒 Последнее действие\n"
+        f"Нет данных\n\n"
+
+        f"🆔 UUID\n"
+        f"<code>{uuid}</code>\n\n"
+
+        "━━━━━━━━━━━━━━"
     )
 
     await callback.message.edit_text(
