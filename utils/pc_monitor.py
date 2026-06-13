@@ -144,6 +144,20 @@ async def monitor_pcs():
 
             sessions_data = get_guest_sessions()
 
+            print()
+print("===== АКТИВНЫЕ СЕССИИ =====")
+
+for session in sessions_data["data"]:
+
+    if session["date_stop"] is None:
+
+        print(
+            session["UUID"],
+            session["guest_id"]
+        )
+
+print()
+            
             # Сбрасываем статусы
             for uuid in PC_MONITOR:
 
@@ -236,4 +250,19 @@ async def monitor_pcs():
                 e
             )
 
+print()
+print("===== СТАТУСЫ ПК =====")
+
+for uuid, pc in PC_MONITOR.items():
+
+    print(
+        pc["pc_name"],
+        "|",
+        pc["status"],
+        "|",
+        pc["guest_id"]
+    )
+
+print()
+        
         await asyncio.sleep(5)
