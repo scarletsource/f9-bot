@@ -20,13 +20,9 @@ from langame_api import (
 
 from utils.show_pc_card import show_pc_card
 
-from utils.pc_status import (
-    set_status,
-    get_status,
-    get_status_icon,
-    get_status_name,
-    get_pc_user,
-    get_pc_play_time
+from utils.pc_mapper import (
+    get_real_status,
+    get_real_user
 )
 
 from utils.pc_history import (
