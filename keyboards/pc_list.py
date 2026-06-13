@@ -1,40 +1,43 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from utils.pc_monitor import (
-    get_monitor_status
+    get_pc_by_uuid
 )
 
 
-def get_status_icon(uuid):
+def get_pc_icon(uuid):
 
-    status = get_monitor_status(
-        uuid
-    )
+    pc = get_pc_by_uuid(uuid)
 
-    icons = {
+    if pc is None:
 
-        "free": "🟢",
+        return "⚫"
 
-        "session": "🔵",
+    #
+    # Сначала действия
+    #
 
-        "tech": "🟡",
+    if pc["action_state"] == "reboot":
 
-        "manual_unlock": "🟣",
+        return "🔄"
 
-        "busy": "🟠",
+    if pc["power_state"] == "shutdown":
 
-        "poweroff": "🔴",
+        return "⚫"
 
-        "shutdown": "⚫",
+    if pc["mode_state"] == "tech":
 
-        "error": "🚨"
+        return "🛠"
 
-    }
+    if pc["mode_state"] == "manual_unlock":
 
-    return icons.get(
-        status,
-        "⚪"
-    )
+        return "🔓"
+
+    if pc["session_state"]:
+
+        return "🔵"
+
+    return "🟢"
 
 
 def pc_list_menu(pcs):
@@ -42,6 +45,10 @@ def pc_list_menu(pcs):
     builder = InlineKeyboardBuilder()
 
     for pc in pcs:
+
+        icon = get_pc_icon(
+            pc["UUID"]
+        )
 
         try:
 
@@ -52,10 +59,6 @@ def pc_list_menu(pcs):
             pc_name = str(
                 pc["name"]
             )
-
-        icon = get_status_icon(
-            pc["UUID"]
-        )
 
         builder.button(
 
@@ -73,8 +76,6 @@ def pc_list_menu(pcs):
 
     )
 
-    builder.adjust(
-        2
-    )
+    builder.adjust(2)
 
     return builder.as_markup()
