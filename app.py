@@ -292,10 +292,8 @@ async def pc_selected(callback: CallbackQuery):
         f"{zone_name}\n\n"
 
         f"👤 Пользователь\n"
-        f"{get_pc_user(uuid)}\n\n"
-
-        f"⏳ Время игры\n"
-        f"{get_pc_play_time(uuid)}\n\n"
+        
+        f"Свободен\n\n"
 
         f"📜 История действий\n"
         f"{history_text}\n"
