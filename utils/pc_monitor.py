@@ -222,3 +222,19 @@ async def monitor_pcs():
 def get_all_pcs():
 
     return PC_MONITOR
+
+def get_all_zones():
+
+    zones = {}
+
+    for pc in PC_MONITOR.values():
+
+        type_id = pc["type_id"]
+
+        zone_name = pc["zone_name"]
+
+        if type_id not in zones:
+
+            zones[type_id] = zone_name
+
+    return zones
