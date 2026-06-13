@@ -96,10 +96,9 @@ def get_status_icon(uuid):
         "session": "🔵",
         "tech": "🟡",
         "manual_unlock": "🟣",
-        "poweroff": "🔴",
-        "offline": "⚫",
         "busy": "🟠",
-        "service": "🟤",
+        "poweroff": "🔴",
+        "shutdown": "⚫",
         "error": "🚨"
     }
 
@@ -118,10 +117,9 @@ def get_status_name(uuid):
         "session": "На сессии",
         "tech": "Техрежим",
         "manual_unlock": "Ручная разблокировка",
-        "poweroff": "Выключен",
-        "offline": "Недоступен",
         "busy": "Выполняется команда",
-        "service": "Обслуживание",
+        "poweroff": "Выключается",
+        "shutdown": "Выключен",
         "error": "Ошибка"
     }
 
