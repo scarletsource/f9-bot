@@ -292,7 +292,6 @@ async def pc_selected(callback: CallbackQuery):
         f"{zone_name}\n\n"
 
         f"👤 Пользователь\n"
-        
         f"Свободен\n\n"
 
         f"📜 История действий\n"
