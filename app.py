@@ -1,10 +1,12 @@
 import asyncio
 import os
 
+
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
+from aiogram.types import ReplyKeyboardRemove
 
 from langame_api import (
     get_clubs,
@@ -49,6 +51,11 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message):
+
+    await message.answer(
+        "Обновляю интерфейс...",
+        reply_markup=ReplyKeyboardRemove()
+    )
 
     await message.answer(
         "👋 Добро пожаловать в F9 Кибер Арена\n\n"
