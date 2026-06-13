@@ -6,18 +6,18 @@ def pc_types_menu():
     builder = InlineKeyboardBuilder()
 
     builder.button(
-        text="🎮 Game Арена",
+        text="🎮 STANDART",
         callback_data="type_1"
     )
 
     builder.button(
-        text="👑 VIP Арена",
-        callback_data="type_2"
+        text="💎 COMFORT",
+        callback_data="type_3"
     )
 
     builder.button(
-        text="💎 Comfort Арена",
-        callback_data="type_3"
+        text="👑 VIP",
+        callback_data="type_2"
     )
 
     builder.button(
@@ -26,12 +26,7 @@ def pc_types_menu():
     )
 
     builder.button(
-        text="👥 DUO ROOM",
-        callback_data="type_5"
-    )
-
-    builder.button(
-        text="◀️ Назад",
+        text="🏠 Главное меню",
         callback_data="back_main"
     )
 
