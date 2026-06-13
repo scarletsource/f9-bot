@@ -28,6 +28,11 @@ from utils.pc_history import (
     get_history
 )
 
+from utils.club_history import (
+    add_club_history,
+    get_club_history
+)
+
 from keyboards.confirm_menu import confirm_menu
 from keyboards.result_menu import result_menu
 from keyboards.menu import main_menu
@@ -316,6 +321,11 @@ async def confirm_action(callback: CallbackQuery):
         uuid
     )
     
+    add_history(
+    uuid,
+    names[action]
+)
+
     add_history(
     uuid,
     names[action]
