@@ -25,7 +25,8 @@ from utils.pc_monitor import (
     get_monitor_pc_name,
     set_power_state,
     set_mode_state,
-    set_action_state
+    set_action_state,
+    get_all_pcs
 )
 
 from utils.show_pc_card import show_pc_card
