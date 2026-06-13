@@ -17,25 +17,25 @@ FILE_NAME = os.path.join(
 
 print("STATUS FILE =", FILE_NAME)
 
-def get_pc_play_time(uuid):
+#def get_pc_play_time(uuid):
 
-    session = get_pc_session(uuid)
+   # session = get_pc_session(uuid)
 
-    if session is None:
+ #   if session is None:
 
-        return "-"
+  #      return "-"
 
-    start = datetime.strptime(
-        session["date_start"],
-        "%Y-%m-%d %H:%M:%S"
-    )
+ #   start = datetime.strptime(
+  #      session["date_start"],
+#        "%Y-%m-%d %H:%M:%S"
+ #   )
 
-    delta = datetime.now() - start
+  #  delta = datetime.now() - start
 
-    hours = delta.seconds // 3600
-    minutes = (delta.seconds % 3600) // 60
-
-    return f"{hours}ч {minutes}м"
+ #   hours = delta.seconds // 3600
+  #  minutes = (delta.seconds % 3600) // 60
+#
+   # return f"{hours}ч {minutes}м"
 
 def get_pc_start_time(uuid):
 
@@ -47,36 +47,36 @@ def get_pc_start_time(uuid):
 
     return session["date_start"]
 
-def get_pc_user(uuid):
+#def get_pc_user(uuid):
 
-    session = get_pc_session(uuid)
+  #  session = get_pc_session(uuid)
 
-    if session is None:
+ #   if session is None:
 
-        return "Свободен"
+   #     return "Свободен"
 
-    return f"ID {session['guest_id']}"
+  #  return f"ID {session['guest_id']}"
 
-def load_statuses():
+#def load_statuses():
 
-    if not os.path.exists(FILE_NAME):
+ #   if not os.path.exists(FILE_NAME):
 
-        with open(FILE_NAME, "w", encoding="utf-8") as f:
-            json.dump({}, f)
+    #    with open(FILE_NAME, "w", encoding="utf-8") as f:
+  #          json.dump({}, f)
 
-    with open(FILE_NAME, "r", encoding="utf-8") as f:
-        return json.load(f)
+  #  with open(FILE_NAME, "r", encoding="utf-8") as f:
+   #     return json.load(f)
 
 
-def save_statuses(statuses):
+#def save_statuses(statuses):
 
-    with open(FILE_NAME, "w", encoding="utf-8") as f:
-        json.dump(
-            statuses,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
+   # with open(FILE_NAME, "w", encoding="utf-8") as f:
+    #    json.dump(
+       #     statuses,
+      #      f,
+        #    ensure_ascii=False,
+       #     indent=4
+       # )
 
 def get_real_status(uuid):
 
