@@ -166,16 +166,15 @@ async def pc_action(callback: CallbackQuery):
     }
 
     await callback.message.edit_text(
-    f"⚠ Подтвердите действие\n\n"
-    f"{names[action]}",
-    reply_markup=confirm_menu(
-        action,
-        uuid
+        f"⚠ Подтвердите действие\n\n"
+        f"{names[action]}",
+        reply_markup=confirm_menu(
+            action,
+            uuid
+        )
     )
-)
 
     await callback.answer()
-
 @dp.callback_query(lambda c: c.data.startswith("confirm_"))
 async def confirm_action(callback: CallbackQuery):
 
