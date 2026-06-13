@@ -17,8 +17,17 @@ def main_menu():
     builder.button(text="📊 Статистика", callback_data="stats")
     builder.button(text="🖥 Компьютеры", callback_data="pc")
 
+    builder.button(text="📋 Журнал действий", callback_data="club_history")
+
     builder.button(text="⚙️ Админка", callback_data="admin")
 
-    builder.adjust(2, 2, 2, 2, 1)
+    builder.adjust(
+        2,
+        2,
+        2,
+        2,
+        1,
+        1
+    )
 
     return builder.as_markup()
