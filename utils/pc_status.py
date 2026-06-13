@@ -1,8 +1,14 @@
 import json
 import os
 
-FILE_NAME = "pc_status.json"
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 
+FILE_NAME = os.path.join(
+    BASE_DIR,
+    "pc_status.json"
+)
 
 def load_statuses():
 
@@ -33,7 +39,10 @@ def set_status(uuid, status):
     statuses[uuid] = status
 
     save_statuses(statuses)
-
+    
+    print(FILE_NAME)
+    
+    print(statuses)
 
 def get_status(uuid):
 
