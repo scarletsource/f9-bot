@@ -72,27 +72,8 @@ async def operations(message: Message):
 
     data = get_all_operations_log()
 
-    import json
-
-    with open(
-        "operations.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
-
-    file = FSInputFile(
-        "operations.json"
-    )
-
-    await message.answer_document(
-        file
+    await message.answer(
+        str(data)[:4000]
     )
 
 @dp.message(Command("guestlogs"))
