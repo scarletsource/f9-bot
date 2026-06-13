@@ -71,15 +71,14 @@ def get_pc_session(uuid):
 
     for session in sessions:
 
-        if (
-            session["UUID"] == uuid
-            and session["date_stop"] is None
-        ):
+        if session["date_stop"] is None:
 
-            return session
+            print()
+            print("АКТИВНАЯ СЕССИЯ")
+            print(session)
+            print()
 
     return None
-
 
 def get_clubs():
 
