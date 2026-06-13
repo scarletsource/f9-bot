@@ -46,13 +46,18 @@ def set_status(uuid, status):
     print(FILE_NAME)
     print(statuses)
 
+from langame_api import get_busy_pcs
+
+
 def get_status(uuid):
 
-    statuses = load_statuses()
+    busy_pcs = get_busy_pcs()
 
-    print("LOAD")
-    print(FILE_NAME)
-    print(statuses)
+    if uuid in busy_pcs:
+
+        return "session"
+
+    statuses = load_statuses()
 
     return statuses.get(
         uuid,
