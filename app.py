@@ -176,64 +176,76 @@ async def pc_action(callback: CallbackQuery):
 
     await callback.answer()
 
-@dp.callback_query(lambda c: c.data == "confirm_action")
+@dp.callback_query(lambda c: c.data.startswith("confirm_"))
 async def confirm_action(callback: CallbackQuery):
 
-    if CURRENT_COMMAND == "tech_start":
+    data = callback.data.split("_")
+
+    action = data[1]
+    uuid = "_".join(data[2:])
+
+    commands = {
+        "reboot": "reboot",
+        "poweron": "power_on",
+        "lock": "lock",
+        "unlock": "unlock",
+        "poweroff": "power_off",
+        "techstart": "tech_start",
+        "techstop": "tech_stop"
+    }
+
+    names = {
+        "reboot": "🔄 Перезагрузка",
+        "poweron": "⚡ Включение",
+        "lock": "🔒 Блокировка",
+        "unlock": "🔓 Ручная разблокировка",
+        "poweroff": "⛔ Выключение",
+        "techstart": "🛠 Тех старт",
+        "techstop": "🛠 Тех стоп"
+    }
+
+    if action == "techstart":
         set_status(
-            CURRENT_UUID,
+            uuid,
             "tech"
         )
-        print(CURRENT_UUID)
-        print(get_status(CURRENT_UUID))
 
-    elif CURRENT_COMMAND == "unlock":
+    elif action == "unlock":
         set_status(
-            CURRENT_UUID,
+            uuid,
             "manual_unlock"
         )
-        print(CURRENT_UUID)
-        print(get_status(CURRENT_UUID))
 
-    elif CURRENT_COMMAND == "power_off":
+    elif action == "poweroff":
         set_status(
-            CURRENT_UUID,
+            uuid,
             "poweroff"
         )
-        print(CURRENT_UUID)
-        print(get_status(CURRENT_UUID))
 
-    elif CURRENT_COMMAND == "power_on":
+    elif action == "poweron":
         set_status(
-            CURRENT_UUID,
+            uuid,
             "free"
         )
-        print(CURRENT_UUID)
-        print(get_status(CURRENT_UUID))
 
-    
-    elif CURRENT_COMMAND == "reboot":
+    elif action == "reboot":
         set_status(
-            CURRENT_UUID,
+            uuid,
             "busy"
         )
-        print(CURRENT_UUID)
-        print(get_status(CURRENT_UUID))
-
 
     data = pc_manage(
-        CURRENT_COMMAND,
-        CURRENT_UUID
+        commands[action],
+        uuid
     )
 
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
-        f"Действие:\n{CURRENT_ACTION_NAME}",
+        f"Действие:\n{names[action]}",
         reply_markup=result_menu()
     )
 
     await callback.answer()
-
 
 @dp.callback_query(lambda c: c.data == "cancel_action")
 async def cancel_action(callback: CallbackQuery):
