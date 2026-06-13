@@ -56,9 +56,16 @@ def get_busy_pcs():
 
     busy = []
 
+    print("АКТИВНЫЕ СЕССИИ:")
+
     for session in sessions:
 
         if session["date_stop"] is None:
+
+            print(
+                session["UUID"],
+                session["guest_id"]
+            )
 
             busy.append(
                 session["UUID"]
