@@ -161,5 +161,8 @@ def get_all_operations_log():
         headers=headers
     )
 
-    return response.json()
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
     
