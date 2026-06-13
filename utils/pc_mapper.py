@@ -1,5 +1,4 @@
 from langame_api import (
-    get_pc_linking,
     get_guest_sessions
 )
 
