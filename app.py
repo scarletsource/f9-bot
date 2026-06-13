@@ -25,7 +25,8 @@ from langame_api import (
 from utils.pc_monitor import (
     monitor_pcs,
     set_monitor_status,
-    get_monitor_pc_name
+    get_monitor_pc_name,
+    get_all_pcs
 )
 
 from utils.show_pc_card import show_pc_card
@@ -176,20 +177,23 @@ async def show_pcs(
         callback.data.split("_")[1]
     )
 
-    data = get_pc_linking()
-
     pcs = []
 
-    for pc in data["data"]:
+    all_pcs = get_all_pcs()
 
-        if (
-            pc["packets_type_PC"] == pc_type
-            and pc["name"] is not None
-        ):
+    for uuid, pc in all_pcs.items():
 
-            pcs.append(
-                pc
-            )
+        if pc["type_id"] == pc_type:
+
+            if pc["pc_name"] is not None:
+
+                pcs.append({
+
+                    "UUID": uuid,
+
+                    "name": pc["pc_name"]
+
+                })
 
     pcs = sorted(
         pcs,
@@ -204,7 +208,6 @@ async def show_pcs(
     )
 
     await callback.answer()
-
 
 @dp.callback_query(
     lambda c: c.data == "back_main"
