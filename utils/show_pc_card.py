@@ -10,6 +10,40 @@ from utils.pc_status import (
 
 from utils.pc_history import get_history
 
+def get_status_icon_live(uuid):
+
+    status = get_monitor_status(uuid)
+
+    icons = {
+        "free": "🟢",
+        "session": "🔵",
+        "tech": "🟡",
+        "manual_unlock": "🟣",
+        "busy": "🟠",
+        "poweroff": "🔴",
+        "shutdown": "⚫",
+        "error": "🚨"
+    }
+
+    return icons.get(status, "⚪")
+
+
+def get_status_name_live(uuid):
+
+    status = get_monitor_status(uuid)
+
+    names = {
+        "free": "Свободен",
+        "session": "На сессии",
+        "tech": "Техрежим",
+        "manual_unlock": "Ручная разблокировка",
+        "busy": "Выполняется команда",
+        "poweroff": "Выключается",
+        "shutdown": "Выключен",
+        "error": "Ошибка"
+    }
+
+    return names.get(status, "Неизвестно")
 
 def show_pc_card(uuid):
 
