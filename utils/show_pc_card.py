@@ -11,15 +11,16 @@ from utils.pc_monitor import (
 
 from utils.pc_history import get_history
 
+
 def get_monitor_user(uuid):
 
     guest = get_monitor_guest(uuid)
 
     if guest is None:
-
         return "Свободен"
 
     return f"ID {guest}"
+
 
 def get_status_icon_live(uuid):
 
@@ -56,12 +57,13 @@ def get_status_name_live(uuid):
 
     return names.get(status, "Неизвестно")
 
+
 def show_pc_card(uuid):
 
     data = get_pc_linking()
-    
+
     types_data = get_pc_types()["data"]
-    
+
     pc_name = "Неизвестно"
     zone_name = "Неизвестно"
 
@@ -71,16 +73,16 @@ def show_pc_card(uuid):
 
             pc_name = pc["name"]
 
-            zone_name = "Неизвестно"
+            for zone in types_data:
 
-for zone in types_data:
+                if zone["id"] == pc["packets_type_PC"]:
 
-    if zone["id"] == pc["packets_type_PC"]:
+                    zone_name = zone["name"]
 
-        zone_name = zone["name"]
+                    break
 
-        break
-        
+            break
+
     history = get_history(uuid)
 
     history_text = ""
@@ -93,8 +95,16 @@ for zone in types_data:
 
         history_text = "Нет данных"
 
+    try:
+
+        pc_number = f"{int(pc_name):02}"
+
+    except:
+
+        pc_number = str(pc_name)
+
     text = (
-        f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
+        f"🖥 <b>ПК-{pc_number}</b>\n\n"
 
         f"📊 Статус\n"
         f"{get_status_icon_live(uuid)} {get_status_name_live(uuid)}\n\n"
@@ -107,7 +117,7 @@ for zone in types_data:
 
         f"⏳ Время игры\n"
         f"{get_monitor_play_time(uuid)}\n\n"
-        
+
         f"📜 История действий\n"
         f"{history_text}\n"
 
