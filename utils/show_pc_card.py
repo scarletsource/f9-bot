@@ -18,10 +18,11 @@ def show_pc_card(uuid):
     zone_name = "Неизвестно"
 
     zones = {
-        1: "🟢 Standard",
-        2: "🟣 VIP",
-        3: "🔵 Bootcamp"
-    }
+    1: "🟢 STANDART",
+    2: "🟣 VIP",
+    3: "🔵 COMFORT",
+    4: "📺 TV"
+}
 
     for pc in data["data"]:
 
