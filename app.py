@@ -17,6 +17,7 @@ from langame_api import (
     get_pc_types,
     get_pc_linking,
     get_adminconsole
+    get_guest_sessions
 )
 
 from utils.pc_status import (
