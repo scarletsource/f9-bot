@@ -23,6 +23,11 @@ from utils.pc_status import (
     get_status_name
 )
 
+from utils.pc_history import (
+    add_history,
+    get_history
+)
+
 from keyboards.confirm_menu import confirm_menu
 from keyboards.result_menu import result_menu
 from keyboards.menu import main_menu
@@ -163,27 +168,40 @@ async def pc_selected(callback: CallbackQuery):
             )
 
             break
+            
+            history = get_history(uuid)
+
+history_text = ""
+
+for item in history:
+
+    history_text += f"{item}\n"
+
+if history_text == "":
+
+    history_text = "Нет данных"
 
     text = (
-        f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
+       text = (
+    f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
 
-        f"📊 Статус\n"
-        f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
+    f"📊 Статус\n"
+    f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
 
-        f"📍 Зона\n"
-        f"{zone_name}\n\n"
+    f"📍 Зона\n"
+    f"{zone_name}\n\n"
 
-        f"👤 Пользователь\n"
-        f"Свободен\n\n"
+    f"👤 Пользователь\n"
+    f"Свободен\n\n"
 
-        f"🕒 Последнее действие\n"
-        f"Нет данных\n\n"
+    f"📜 История действий\n"
+    f"{history_text}\n"
 
-        f"🆔 UUID\n"
-        f"<code>{uuid}</code>\n\n"
+    f"🆔 UUID\n"
+    f"<code>{uuid}</code>\n\n"
 
-        "━━━━━━━━━━━━━━"
-    )
+    "━━━━━━━━━━━━━━"
+)
 
     await callback.message.edit_text(
         text,
@@ -298,7 +316,11 @@ async def confirm_action(callback: CallbackQuery):
         commands[action],
         uuid
     )
-
+    
+    add_history(
+    uuid,
+    names[action]
+)
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
         f"Действие:\n{names[action]}",
