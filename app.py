@@ -329,11 +329,11 @@ response = pc_manage(
 )
 
 add_history(
-uuid,
-names[action]
+    uuid,
+    names[action]
 )
 
-  add_club_history(
+add_club_history(
     f"{names[action]} | {uuid[:4]}"
 )
 
