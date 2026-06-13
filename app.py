@@ -15,8 +15,7 @@ from langame_api import (
     pc_manage,
     get_pc_types,
     get_pc_linking,
-    get_adminconsole,
-    get_guest_sessions
+    get_adminconsole
 )
 
 from utils.show_pc_card import show_pc_card
