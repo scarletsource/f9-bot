@@ -66,6 +66,32 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("pctypesjson"))
+async def pctypesjson(message: Message):
+
+    import json
+
+    data = get_pc_types()
+
+    with open(
+        "pctypes.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
+
+    file = FSInputFile(
+        "pctypes.json"
+    )
+
+    await message.answer_document(file)
+
 @dp.message(Command("guestlogs"))
 async def guestlogs(message: Message):
 
