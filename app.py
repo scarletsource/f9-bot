@@ -70,6 +70,15 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("guestlogs"))
+async def guestlogs(message: Message):
+
+    data = get_guest_logs()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+
 @dp.message(Command("operations"))
 async def operations(message: Message):
 
