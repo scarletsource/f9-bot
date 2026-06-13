@@ -26,6 +26,14 @@ async def monitor_pcs():
 
             busy_pcs = get_busy_pcs()
 
+            print()
+            print("ЗАНЯТЫЕ ПК:")
+
+            for uuid in busy_pcs:
+                print(uuid)
+
+                print()
+            
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
