@@ -22,9 +22,10 @@ from langame_api import (
 
 from utils.pc_monitor import (
     monitor_pcs,
-    set_monitor_status,
     get_monitor_pc_name,
-    get_all_pcs
+    set_power_state,
+    set_mode_state,
+    set_action_state
 )
 
 from utils.show_pc_card import show_pc_card
@@ -289,9 +290,173 @@ async def pc_action(
 @dp.callback_query(
     lambda c: c.data.startswith("confirm_")
 )
+@dp.callback_query(
+    lambda c: c.data.startswith("confirm_")
+)
 async def confirm_action(
     callback: CallbackQuery
 ):
+
+    data = callback.data.split("_")
+
+    action = data[1]
+
+    uuid = "_".join(
+        data[2:]
+    )
+
+    commands = {
+        "reboot": "reboot",
+        "poweron": "power_on",
+        "lock": "lock",
+        "unlock": "unlock",
+        "poweroff": "power_off",
+        "techstart": "tech_start",
+        "techstop": "tech_stop"
+    }
+
+    names = {
+        "reboot": "🔄 Перезагрузка",
+        "poweron": "⚡ Включение",
+        "lock": "🔒 Блокировка",
+        "unlock": "🔓 Ручная разблокировка",
+        "poweroff": "⛔ Выключение",
+        "techstart": "🛠 Тех старт",
+        "techstop": "🛠 Тех стоп"
+    }
+
+    #
+    # Обновляем состояние ПК
+    #
+
+    if action == "techstart":
+
+        set_mode_state(
+            uuid,
+            "tech"
+        )
+
+    elif action == "techstop":
+
+        set_mode_state(
+            uuid,
+            "normal"
+        )
+
+    elif action == "unlock":
+
+        set_mode_state(
+            uuid,
+            "manual_unlock"
+        )
+
+    elif action == "lock":
+
+        set_mode_state(
+            uuid,
+            "normal"
+        )
+
+    elif action == "poweroff":
+
+        set_power_state(
+            uuid,
+            "shutdown"
+        )
+
+    elif action == "poweron":
+
+        set_power_state(
+            uuid,
+            "online"
+        )
+
+    elif action == "reboot":
+
+        set_action_state(
+            uuid,
+            "reboot"
+        )
+
+    #
+    # Отправляем команду в LANGame
+    #
+
+    response = pc_manage(
+        commands[action],
+        uuid
+    )
+
+    #
+    # История ПК
+    #
+
+    add_history(
+        uuid,
+        names[action]
+    )
+
+    #
+    # История клуба
+    #
+
+    pc_name = get_monitor_pc_name(
+        uuid
+    )
+
+    try:
+
+        pc_number = int(
+            pc_name
+        )
+
+    except:
+
+        pc_number = 0
+
+    club_names = {
+
+        "reboot":
+        "🔄 ПК-{:02} перезагружен",
+
+        "poweron":
+        "⚡ ПК-{:02} включен",
+
+        "lock":
+        "🔒 ПК-{:02} заблокирован",
+
+        "unlock":
+        "🔓 ПК-{:02} разблокирован",
+
+        "poweroff":
+        "⛔ ПК-{:02} выключен",
+
+        "techstart":
+        "🛠 ПК-{:02} переведен в техрежим",
+
+        "techstop":
+        "🟢 ПК-{:02} выведен из техрежима"
+
+    }
+
+    add_club_history(
+
+        club_names[action].format(
+            pc_number
+        )
+
+    )
+
+    await callback.message.edit_text(
+
+        "✅ Команда успешно отправлена\n\n"
+        f"Действие:\n{names[action]}",
+
+        reply_markup=result_menu()
+
+    )
+
+    await callback.answer()
 
     data = callback.data.split("_")
 
