@@ -63,6 +63,32 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("guestlogs"))
+async def guestlogs(message: Message):
+
+    data = get_guest_logs()
+
+    import json
+
+    with open(
+        "guest_logs.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
+
+    await message.answer_document(
+        FSInputFile(
+            "guest_logs.json"
+        )
+    )
+
 @dp.message(Command("checkpc"))
 async def checkpc(message: Message):
 
