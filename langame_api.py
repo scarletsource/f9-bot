@@ -13,6 +13,14 @@ headers = {
 SESSIONS_CACHE = []
 LAST_UPDATE = 0
 
+def get_guest_sessions():
+
+    response = requests.get(
+        f"{BASE_URL}/guests/sessions",
+        headers=headers
+    )
+
+    return response.json()
 
 def get_cached_sessions():
 
