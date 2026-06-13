@@ -1,8 +1,9 @@
 from langame_api import get_pc_linking
 
-from utils.pc_status import (
-    get_pc_user,
-    get_pc_play_time
+from utils.pc_monitor import (
+    get_monitor_status,
+    get_monitor_guest,
+    get_monitor_play_time
 )
 
 from utils.pc_monitor import (
