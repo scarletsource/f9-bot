@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 SESSIONS_CACHE = []
 LAST_UPDATE = 0
@@ -11,14 +12,49 @@ headers = {
     "X-Api-Key": API_KEY
 }
 
-from datetime import datetime
+def get_cached_sessions():
 
+    global SESSIONS_CACHE
+    global LAST_UPDATE
+
+    now = time.time()
+
+    if now - LAST_UPDATE > 5:
+
+        response = requests.get(
+            f"{BASE_URL}/guests/sessions",
+            headers=headers
+        )
+
+        data = response.json()
+
+        SESSIONS_CACHE = data["data"]
+
+        LAST_UPDATE = now
+
+    return SESSIONS_CACHE
+
+def get_busy_pcs():
+
+    sessions = get_cached_sessions()
+
+    busy = []
+
+    for session in sessions:
+
+        if session["date_stop"] is None:
+
+            busy.append(
+                session["UUID"]
+            )
+
+    return busy
 
 def get_pc_session(uuid):
 
-    data = get_guest_sessions()
+    sessions = get_cached_sessions()
 
-    for session in data["data"]:
+    for session in sessions:
 
         if (
             session["UUID"] == uuid
@@ -29,21 +65,7 @@ def get_pc_session(uuid):
 
     return None
 
-def get_busy_pcs():
-
-    data = get_guest_sessions()
-
-    busy = []
-
-    for session in data["data"]:
-
-        if session["date_stop"] is None:
-
-            busy.append(
-                session["UUID"]
-            )
-
-    return busy
+from datetime import datetime
 
 def get_guest_sessions():
 
@@ -54,23 +76,6 @@ def get_guest_sessions():
 
     return response.json()
 
-
-def get_busy_pcs():
-
-    data = get_guest_sessions()
-
-    busy = []
-
-    for session in data["data"]:
-
-        if session["date_stop"] is None:
-
-            busy.append(
-                session["UUID"]
-            )
-
-    return busy
-    
 def get_clubs():
 
     response = requests.get(
