@@ -347,26 +347,27 @@ async def confirm_action(callback: CallbackQuery):
             break
 
     club_names = {
-    "reboot": "🔄 ПК-{:02} перезагружен",
-    "poweron": "⚡ ПК-{:02} включен",
-    "lock": "🔒 ПК-{:02} заблокирован",
-    "unlock": "🔓 ПК-{:02} разблокирован",
-    "poweroff": "⛔ ПК-{:02} выключен",
-    "techstart": "🛠 ПК-{:02} переведен в техрежим",
-    "techstop": "🟢 ПК-{:02} выведен из техрежима"
-}
+        "reboot": "🔄 ПК-{:02} перезагружен",
+        "poweron": "⚡ ПК-{:02} включен",
+        "lock": "🔒 ПК-{:02} заблокирован",
+        "unlock": "🔓 ПК-{:02} разблокирован",
+        "poweroff": "⛔ ПК-{:02} выключен",
+        "techstart": "🛠 ПК-{:02} переведен в техрежим",
+        "techstop": "🟢 ПК-{:02} выведен из техрежима"
+    }
 
-add_club_history(
-    club_names[action].format(
-        int(pc_name)
+    add_club_history(
+        club_names[action].format(
+            int(pc_name)
+        )
     )
-)
 
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
         f"Действие:\n{names[action]}",
         reply_markup=result_menu()
     )
+
     await callback.answer()
 
 @dp.callback_query(lambda c: c.data == "cancel_action")
