@@ -35,6 +35,29 @@ def save_statuses(statuses):
             indent=4
         )
 
+def get_real_status(uuid):
+
+    statuses = load_statuses()
+
+    local_status = statuses.get(uuid)
+
+    # Приоритет специальных режимов
+    if local_status == "poweroff":
+        return "poweroff"
+
+    if local_status == "tech":
+        return "tech"
+
+    if local_status == "manual_unlock":
+        return "manual_unlock"
+
+    # Проверяем реальные сессии LANGame
+    busy_pcs = get_busy_pcs()
+
+    if uuid in busy_pcs:
+        return "session"
+
+    return "free"
 
 def set_status(uuid, status):
 
@@ -52,6 +75,8 @@ from langame_api import get_busy_pcs
 
 
 def get_status(uuid):
+
+    return get_real_status(uuid)
 
     statuses = load_statuses()
 
@@ -74,7 +99,7 @@ def get_status(uuid):
     
 def get_status_icon(uuid):
 
-    status = get_status(uuid)
+    status = get_real_status(uuid)
 
     icons = {
         "free": "🟢",
@@ -96,7 +121,7 @@ def get_status_icon(uuid):
 
 def get_status_name(uuid):
 
-    status = get_status(uuid)
+    status = get_real_status(uuid)
 
     names = {
         "free": "Свободен",
