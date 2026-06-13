@@ -63,6 +63,14 @@ async def start(message: Message):
         "Выберите раздел:",
         reply_markup=main_menu()
     )
+@dp.message(Command("pclist"))
+async def pclist(message: Message):
+
+    data = get_pc_list()
+
+    await message.answer(
+        str(data)[:4000]
+    )
 
 @dp.message(Command("pctypes"))
 async def pctypes(message: Message):
