@@ -1,10 +1,11 @@
 import json
 import os
-
-from langame_api import get_busy_pcs
-from langame_api import get_pc_session
-
 from datetime import datetime
+
+from langame_api import (
+    get_busy_pcs,
+    get_pc_session
+)
 
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
@@ -17,132 +18,31 @@ FILE_NAME = os.path.join(
 
 print("STATUS FILE =", FILE_NAME)
 
-#def get_pc_play_time(uuid):
 
-   # session = get_pc_session(uuid)
+def load_statuses():
 
- #   if session is None:
+    if not os.path.exists(FILE_NAME):
 
-  #      return "-"
+        with open(FILE_NAME, "w", encoding="utf-8") as f:
 
- #   start = datetime.strptime(
-  #      session["date_start"],
-#        "%Y-%m-%d %H:%M:%S"
- #   )
+            json.dump({}, f)
 
-  #  delta = datetime.now() - start
+    with open(FILE_NAME, "r", encoding="utf-8") as f:
 
- #   hours = delta.seconds // 3600
-  #  minutes = (delta.seconds % 3600) // 60
-#
-   # return f"{hours}ч {minutes}м"
-
-def get_pc_start_time(uuid):
-
-    session = get_pc_session(uuid)
-
-    if session is None:
-
-        return "-"
-
-    return session["date_start"]
-
-#def get_pc_user(uuid):
-
-  #  session = get_pc_session(uuid)
-
- #   if session is None:
-
-   #     return "Свободен"
-
-  #  return f"ID {session['guest_id']}"
-
-#def load_statuses():
-
- #   if not os.path.exists(FILE_NAME):
-
-    #    with open(FILE_NAME, "w", encoding="utf-8") as f:
-  #          json.dump({}, f)
-
-  #  with open(FILE_NAME, "r", encoding="utf-8") as f:
-   #     return json.load(f)
+        return json.load(f)
 
 
-#def save_statuses(statuses):
+def save_statuses(statuses):
 
-   # with open(FILE_NAME, "w", encoding="utf-8") as f:
-    #    json.dump(
-       #     statuses,
-      #      f,
-        #    ensure_ascii=False,
-       #     indent=4
-       # )
+    with open(FILE_NAME, "w", encoding="utf-8") as f:
 
-def get_real_status(uuid):
+        json.dump(
+            statuses,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
 
-    statuses = load_statuses()
-
-    local_status = statuses.get(uuid)
-
-    # Приоритет специальных режимов
-    if local_status == "poweroff":
-        return "poweroff"
-
-    if local_status == "tech":
-        return "tech"
-
-    if local_status == "manual_unlock":
-        return "manual_unlock"
-
-    # Проверяем реальные сессии LANGame
-    busy_pcs = get_busy_pcs()
-
-    if uuid in busy_pcs:
-        return "session"
-
-    return "free"
-
-def get_pc_user(uuid):
-
-    session = get_pc_session(uuid)
-
-    if session is None:
-
-        return "Свободен"
-
-    return f"ID {session['guest_id']}"
-
-
-def get_pc_start_time(uuid):
-
-    session = get_pc_session(uuid)
-
-    if session is None:
-
-        return "-"
-
-    return session["date_start"]
-
-
-def get_pc_play_time(uuid):
-
-    session = get_pc_session(uuid)
-
-    if session is None:
-
-        return "-"
-
-    start = datetime.strptime(
-        session["date_start"],
-        "%Y-%m-%d %H:%M:%S"
-    )
-
-    delta = datetime.now() - start
-
-    hours = delta.seconds // 3600
-    minutes = (delta.seconds % 3600) // 60
-
-    return f"{hours}ч {minutes}м"
 
 def set_status(uuid, status):
 
@@ -152,25 +52,27 @@ def set_status(uuid, status):
 
     save_statuses(statuses)
 
-    print("SAVE")
-    print(FILE_NAME)
-    print(statuses)
 
-def get_status(uuid):
-
-    return get_real_status(uuid)
+def get_real_status(uuid):
 
     statuses = load_statuses()
 
     local_status = statuses.get(uuid)
 
-    if local_status in [
-        "tech",
-        "manual_unlock",
-        "poweroff"
-    ]:
-        return local_status
+    # Приоритет локальных режимов
+    if local_status == "poweroff":
 
+        return "poweroff"
+
+    if local_status == "tech":
+
+        return "tech"
+
+    if local_status == "manual_unlock":
+
+        return "manual_unlock"
+
+    # Проверка активной сессии
     busy_pcs = get_busy_pcs()
 
     if uuid in busy_pcs:
@@ -178,7 +80,13 @@ def get_status(uuid):
         return "session"
 
     return "free"
-    
+
+
+def get_status(uuid):
+
+    return get_real_status(uuid)
+
+
 def get_status_icon(uuid):
 
     status = get_real_status(uuid)
@@ -221,3 +129,47 @@ def get_status_name(uuid):
         status,
         "Неизвестно"
     )
+
+
+def get_pc_user(uuid):
+
+    session = get_pc_session(uuid)
+
+    if session is None:
+
+        return "Свободен"
+
+    return f"ID {session['guest_id']}"
+
+
+def get_pc_start_time(uuid):
+
+    session = get_pc_session(uuid)
+
+    if session is None:
+
+        return "-"
+
+    return session["date_start"]
+
+
+def get_pc_play_time(uuid):
+
+    session = get_pc_session(uuid)
+
+    if session is None:
+
+        return "-"
+
+    start = datetime.strptime(
+        session["date_start"],
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    delta = datetime.now() - start
+
+    hours = delta.seconds // 3600
+
+    minutes = (delta.seconds % 3600) // 60
+
+    return f"{hours}ч {minutes}м"
