@@ -1,4 +1,7 @@
-from langame_api import get_pc_linking
+from langame_api import (
+    get_pc_linking,
+    get_pc_types
+)
 
 from utils.pc_monitor import (
     get_monitor_status,
@@ -6,11 +9,17 @@ from utils.pc_monitor import (
     get_monitor_play_time
 )
 
-from utils.pc_monitor import (
-    get_monitor_status
-)
-
 from utils.pc_history import get_history
+
+def get_monitor_user(uuid):
+
+    guest = get_monitor_guest(uuid)
+
+    if guest is None:
+
+        return "Свободен"
+
+    return f"ID {guest}"
 
 def get_status_icon_live(uuid):
 
@@ -50,16 +59,11 @@ def get_status_name_live(uuid):
 def show_pc_card(uuid):
 
     data = get_pc_linking()
-
+    
+    types_data = get_pc_types()["data"]
+    
     pc_name = "Неизвестно"
     zone_name = "Неизвестно"
-
-    zones = {
-    1: "🟢 STANDART",
-    2: "🟣 VIP",
-    3: "🔵 COMFORT",
-    4: "📺 TV"
-}
 
     for pc in data["data"]:
 
@@ -67,13 +71,16 @@ def show_pc_card(uuid):
 
             pc_name = pc["name"]
 
-            zone_name = zones.get(
-                pc["packets_type_PC"],
-                "⚪ Неизвестно"
-            )
+            zone_name = "Неизвестно"
 
-            break
+for zone in types_data:
 
+    if zone["id"] == pc["packets_type_PC"]:
+
+        zone_name = zone["name"]
+
+        break
+        
     history = get_history(uuid)
 
     history_text = ""
@@ -96,11 +103,11 @@ def show_pc_card(uuid):
         f"{zone_name}\n\n"
 
         f"👤 Пользователь\n"
-        f"{get_pc_user(uuid)}\n\n"
+        f"{get_monitor_user(uuid)}\n\n"
 
         f"⏳ Время игры\n"
-        f"{get_pc_play_time(uuid)}\n\n"
-
+        f"{get_monitor_play_time(uuid)}\n\n"
+        
         f"📜 История действий\n"
         f"{history_text}\n"
 
