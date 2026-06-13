@@ -1,6 +1,8 @@
 import json
 import os
 
+from langame_api import get_busy_pcs
+
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
@@ -51,19 +53,25 @@ from langame_api import get_busy_pcs
 
 def get_status(uuid):
 
+    statuses = load_statuses()
+
+    local_status = statuses.get(uuid)
+
+    if local_status in [
+        "tech",
+        "manual_unlock",
+        "poweroff"
+    ]:
+        return local_status
+
     busy_pcs = get_busy_pcs()
 
     if uuid in busy_pcs:
 
         return "session"
 
-    statuses = load_statuses()
-
-    return statuses.get(
-        uuid,
-        "free"
-    )
-
+    return "free"
+    
 def get_status_icon(uuid):
 
     status = get_status(uuid)
