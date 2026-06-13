@@ -15,7 +15,8 @@ from langame_api import (
     get_pc_list,
     pc_manage,
     get_pc_types,
-    get_pc_linking
+    get_pc_linking,
+    get_adminconsole
 )
 
 from utils.pc_status import (
