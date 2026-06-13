@@ -18,7 +18,8 @@ from langame_api import (
     get_pc_linking,
     get_adminconsole,
     get_all_operations_log,
-    get_guest_logs
+    get_guest_logs,
+    get_working_shifts
 )
 
 from utils.show_pc_card import show_pc_card
@@ -71,6 +72,15 @@ async def start(message: Message):
 async def operations(message: Message):
 
     data = get_all_operations_log()
+
+    await message.answer(
+        str(data)[:4000]
+    )
+
+@dp.message(Command("shifts"))
+async def shifts(message: Message):
+
+    data = get_working_shifts()
 
     await message.answer(
         str(data)[:4000]
