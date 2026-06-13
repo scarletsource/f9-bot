@@ -88,7 +88,7 @@ def show_pc_card(uuid):
         f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
 
         f"📊 Статус\n"
-        f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
+        f"{get_status_icon_live(uuid)} {get_status_name_live(uuid)}\n\n"
 
         f"📍 Зона\n"
         f"{zone_name}\n\n"
