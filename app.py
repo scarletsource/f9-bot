@@ -140,23 +140,30 @@ async def pc_selected(callback: CallbackQuery):
         ""
     )
 
-    text = (
-    "🖥 <b>Управление компьютерами</b>\n\n"
-    "🟢 Свободен\n"
-    "🟣 Ручная разблокировка\n"
-    "🟡 Техрежим\n"
-    "🔴 Выключен\n"
-    "🟠 Выполняется команда\n"
-    "⚫ Недоступен\n\n"
-    "━━━━━━━━━━━━━━\n\n"
-    "Выберите компьютер:"
-)
+    data = get_pc_linking()
 
-await callback.message.edit_text(
-    text,
-    reply_markup=pc_list_menu(pcs),
-    parse_mode="HTML"
-)
+    pc_name = "Неизвестно"
+
+    for pc in data["data"]:
+
+        if pc["UUID"] == uuid:
+
+            pc_name = pc["name"]
+
+            break
+
+    text = (
+        f"🖥 <b>ПК-{pc_name}</b>\n\n"
+        f"Статус: {get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
+        "━━━━━━━━━━━━━━\n\n"
+        "Выберите действие:"
+    )
+
+    await callback.message.edit_text(
+        text,
+        reply_markup=pc_actions_menu(uuid),
+        parse_mode="HTML"
+    )
 
     await callback.answer()
 
