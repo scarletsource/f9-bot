@@ -33,13 +33,6 @@ def get_routes():
         "text": response.text
     }
 
-def get_adminconsole():
-
-    response = requests.get(
-        f"{BASE_URL}/ver/get_adminconsole",
-        headers=headers
-    )
-
     return response.json()
 
 def get_products():
@@ -97,6 +90,15 @@ def get_pc_linking():
 
     response = requests.get(
         f"{BASE_URL}/global/linking_pc_by_type/list",
+        headers=headers
+    )
+
+    return response.json()
+
+def get_adminconsole():
+
+    response = requests.get(
+        f"{BASE_URL}/ver/get_adminconsole",
         headers=headers
     )
 
