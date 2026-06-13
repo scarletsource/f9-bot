@@ -8,6 +8,24 @@ headers = {
     "X-Api-Key": API_KEY
 }
 
+from datetime import datetime
+
+
+def get_pc_session(uuid):
+
+    data = get_guest_sessions()
+
+    for session in data["data"]:
+
+        if (
+            session["UUID"] == uuid
+            and session["date_stop"] is None
+        ):
+
+            return session
+
+    return None
+
 def get_busy_pcs():
 
     data = get_guest_sessions()
