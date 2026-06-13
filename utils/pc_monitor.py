@@ -108,23 +108,40 @@ async def monitor_pcs():
 
                 if uuid not in PC_MONITOR:
 
-                    PC_MONITOR[uuid] = {
+                   PC_MONITOR[uuid] = {
 
-                        "pc_name": pc["name"],
+    "pc_name": pc["name"],
 
-                        "fiscal_name": pc["fiscal_name"],
+    "fiscal_name": pc["fiscal_name"],
 
-                        "guest_id": None,
+    "type_id": pc["packets_type_PC"],
 
-                        "date_start": None,
+    "guest_id": None,
 
-                        "status": "free",
+    "date_start": None,
 
-                        "last_seen": time.time()
-                    }
+    "status": "free",
 
+    "last_seen": time.time()
+}
                 else:
 
+                    def get_monitor_pc_name(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "Неизвестно"
+
+    return PC_MONITOR[uuid]["pc_name"]
+
+    def get_monitor_type(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return None
+
+    return PC_MONITOR[uuid]["type_id"]
+                    
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
             # отмечаем активные сессии
