@@ -1,6 +1,9 @@
 import os
 import requests
 
+SESSIONS_CACHE = []
+LAST_UPDATE = 0
+
 BASE_URL = os.getenv("LANGAME_URL")
 API_KEY = os.getenv("LANGAME_API_KEY")
 
