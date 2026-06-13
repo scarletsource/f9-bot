@@ -1,10 +1,11 @@
 from langame_api import get_pc_linking
 
 from utils.pc_status import (
-    get_status_icon,
-    get_status_name,
     get_pc_user,
-    get_pc_play_time,
+    get_pc_play_time
+)
+
+from utils.pc_monitor import (
     get_monitor_status
 )
 
