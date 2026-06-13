@@ -332,9 +332,21 @@ async def confirm_action(callback: CallbackQuery):
         uuid,
         names[action]
     )
+    
+    pc_name = "Неизвестно"
 
+    data_pc = get_pc_linking()
+
+    for pc in data_pc["data"]:
+
+    if pc["UUID"] == uuid:
+
+        pc_name = pc["name"]
+
+        break
+        
     add_club_history(
-        f"{names[action]} | {uuid[:4]}"
+    f"{names[action]} | ПК-{int(pc_name):02}"
     )
 
     await callback.message.edit_text(
