@@ -73,6 +73,34 @@ async def pclist(message: Message):
         str(data)[:4000]
     )
 
+@dp.message(Command("adminconsole"))
+async def adminconsole(message: Message):
+
+    data = get_adminconsole()
+
+    import json
+
+    with open(
+        "adminconsole.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
+
+    file = FSInputFile(
+        "adminconsole.json"
+    )
+
+    await message.answer_document(
+        file
+    )
+
 @dp.message(Command("pctypes"))
 async def pctypes(message: Message):
 
