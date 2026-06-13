@@ -26,10 +26,6 @@ from utils.pc_monitor import monitor_pcs
 
 from utils.show_pc_card import show_pc_card
 
-from utils.pc_status import (
-    set_status
-)
-
 from utils.pc_history import (
     add_history
 )
@@ -386,55 +382,6 @@ async def confirm_action(
         "techstart": "🛠 Тех старт",
         "techstop": "🛠 Тех стоп"
     }
-
-    if action == "techstart":
-
-        set_status(
-            uuid,
-            "tech"
-        )
-
-    elif action == "techstop":
-
-        set_status(
-            uuid,
-            "free"
-        )
-
-    elif action == "unlock":
-
-        set_status(
-            uuid,
-            "manual_unlock"
-        )
-
-    elif action == "lock":
-
-        set_status(
-            uuid,
-            "free"
-        )
-
-    elif action == "poweroff":
-
-        set_status(
-            uuid,
-            "poweroff"
-        )
-
-    elif action == "poweron":
-
-        set_status(
-            uuid,
-            "free"
-        )
-
-    elif action == "reboot":
-
-        set_status(
-            uuid,
-            "busy"
-        )
 
     response = pc_manage(
         commands[action],
