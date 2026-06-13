@@ -19,6 +19,8 @@ from langame_api import (
     get_guest_sessions
 )
 
+from utils.show_pc_card import show_pc_card
+
 from utils.pc_status import (
     set_status,
     get_status,
@@ -236,67 +238,8 @@ async def pc_selected(callback: CallbackQuery):
         ""
     )
 
-    data = get_pc_linking()
-
-    pc_name = "Неизвестно"
-    zone_name = "Неизвестно"
-
-    zones = {
-        1: "🟢 Standard",
-        2: "🟣 VIP",
-        3: "🔵 Bootcamp"
-    }
-
-    for pc in data["data"]:
-
-        if pc["UUID"] == uuid:
-
-            pc_name = pc["name"]
-
-            zone_name = zones.get(
-                pc["packets_type_PC"],
-                "⚪ Неизвестно"
-            )
-
-            break
-
-    history = get_history(uuid)
-
-    history_text = ""
-
-    for item in history:
-
-        history_text += f"{item}\n"
-
-    if history_text == "":
-
-        history_text = "Нет данных"
-
-    text = (
-        f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
-
-        f"📊 Статус\n"
-        f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
-
-        f"📍 Зона\n"
-        f"{zone_name}\n\n"
-
-        f"👤 Пользователь\n"
-        f"{get_pc_user(uuid)}\n\n"
-
-        f"⏳ Время игры\n"
-        f"{get_pc_play_time(uuid)}\n\n"
-
-        f"📜 История действий\n"
-        
-        f"🆔 UUID\n"
-        f"<code>{uuid}</code>\n\n"
-
-        "━━━━━━━━━━━━━━"
-    )
-
     await callback.message.edit_text(
-        text,
+        show_pc_card(uuid),
         reply_markup=pc_actions_menu(uuid),
         parse_mode="HTML"
     )
