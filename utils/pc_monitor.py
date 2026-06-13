@@ -6,6 +6,8 @@ from langame_api import (
     get_guest_sessions
 )
 
+from datetime import datetime
+
 PC_MONITOR = {}
 
 def get_monitor_status(uuid):
@@ -16,6 +18,44 @@ def get_monitor_status(uuid):
 
     return PC_MONITOR[uuid]["status"]
 
+def get_monitor_start_time(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "-"
+
+    start_time = PC_MONITOR[uuid]["date_start"]
+
+    if start_time is None:
+
+        return "-"
+
+    return start_time
+
+def get_monitor_play_time(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "-"
+
+    start_time = PC_MONITOR[uuid]["date_start"]
+
+    if start_time is None:
+
+        return "-"
+
+    start = datetime.strptime(
+        start_time,
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    delta = datetime.now() - start
+
+    hours = delta.seconds // 3600
+
+    minutes = (delta.seconds % 3600) // 60
+
+    return f"{hours}ч {minutes}м"
 
 def get_monitor_name(uuid):
 
