@@ -1,66 +1,34 @@
 import asyncio
 import time
+from datetime import datetime
 
 from langame_api import (
     get_pc_linking,
     get_guest_sessions
 )
 
-from datetime import datetime
-
 PC_MONITOR = {}
+
 
 def get_monitor_status(uuid):
 
     if uuid not in PC_MONITOR:
-
         return "shutdown"
 
     return PC_MONITOR[uuid]["status"]
 
-def get_monitor_start_time(uuid):
+
+def get_monitor_guest(uuid):
 
     if uuid not in PC_MONITOR:
+        return None
 
-        return "-"
+    return PC_MONITOR[uuid]["guest_id"]
 
-    start_time = PC_MONITOR[uuid]["date_start"]
 
-    if start_time is None:
-
-        return "-"
-
-    return start_time
-
-def get_monitor_play_time(uuid):
+def get_monitor_pc_name(uuid):
 
     if uuid not in PC_MONITOR:
-
-        return "-"
-
-    start_time = PC_MONITOR[uuid]["date_start"]
-
-    if start_time is None:
-
-        return "-"
-
-    start = datetime.strptime(
-        start_time,
-        "%Y-%m-%d %H:%M:%S"
-    )
-
-    delta = datetime.now() - start
-
-    hours = delta.seconds // 3600
-
-    minutes = (delta.seconds % 3600) // 60
-
-    return f"{hours}ч {minutes}м"
-
-def get_monitor_name(uuid):
-
-    if uuid not in PC_MONITOR:
-
         return "Неизвестно"
 
     return PC_MONITOR[uuid]["pc_name"]
@@ -69,19 +37,60 @@ def get_monitor_name(uuid):
 def get_monitor_fiscal_name(uuid):
 
     if uuid not in PC_MONITOR:
-
         return "-"
 
     return PC_MONITOR[uuid]["fiscal_name"]
 
 
-def get_monitor_guest(uuid):
+def get_monitor_type(uuid):
 
     if uuid not in PC_MONITOR:
-
         return None
 
-    return PC_MONITOR[uuid]["guest_id"]
+    return PC_MONITOR[uuid]["type_id"]
+
+
+def get_monitor_start_time(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "-"
+
+    start_time = PC_MONITOR[uuid]["date_start"]
+
+    if start_time is None:
+        return "-"
+
+    return start_time
+
+
+def get_monitor_play_time(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "-"
+
+    start_time = PC_MONITOR[uuid]["date_start"]
+
+    if start_time is None:
+        return "-"
+
+    try:
+
+        start = datetime.strptime(
+            start_time,
+            "%Y-%m-%d %H:%M:%S"
+        )
+
+        delta = datetime.now() - start
+
+        hours = delta.seconds // 3600
+
+        minutes = (delta.seconds % 3600) // 60
+
+        return f"{hours}ч {minutes}м"
+
+    except:
+
+        return "-"
 
 
 async def monitor_pcs():
@@ -94,72 +103,67 @@ async def monitor_pcs():
 
             sessions_data = get_guest_sessions()
 
-            # сбрасываем статусы
+            # Сбрасываем все статусы
             for uuid in PC_MONITOR:
 
                 PC_MONITOR[uuid]["status"] = "free"
+
                 PC_MONITOR[uuid]["guest_id"] = None
+
                 PC_MONITOR[uuid]["date_start"] = None
 
-            # обновляем список ПК
+            # Обновляем список ПК
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
 
                 if uuid not in PC_MONITOR:
 
-                   PC_MONITOR[uuid] = {
+                    PC_MONITOR[uuid] = {
 
-    "pc_name": pc["name"],
+                        "pc_name": pc["name"],
 
-    "fiscal_name": pc["fiscal_name"],
+                        "fiscal_name": pc["fiscal_name"],
 
-    "type_id": pc["packets_type_PC"],
+                        "type_id": pc["packets_type_PC"],
 
-    "guest_id": None,
+                        "guest_id": None,
 
-    "date_start": None,
+                        "date_start": None,
 
-    "status": "free",
+                        "status": "free",
 
-    "last_seen": time.time()
-}
+                        "last_seen": time.time()
+                    }
+
                 else:
 
-                    def get_monitor_pc_name(uuid):
+                    PC_MONITOR[uuid]["pc_name"] = pc["name"]
 
-    if uuid not in PC_MONITOR:
+                    PC_MONITOR[uuid]["fiscal_name"] = pc["fiscal_name"]
 
-        return "Неизвестно"
+                    PC_MONITOR[uuid]["type_id"] = pc["packets_type_PC"]
 
-    return PC_MONITOR[uuid]["pc_name"]
-
-    def get_monitor_type(uuid):
-
-    if uuid not in PC_MONITOR:
-
-        return None
-
-    return PC_MONITOR[uuid]["type_id"]
-                    
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
-            # отмечаем активные сессии
-            for session in sessions_data["data"]:
+            # Отмечаем активные сессии
+            if sessions_data["status"]:
 
-                if session["date_stop"] is not None:
-                    continue
+                for session in sessions_data["data"]:
 
-                uuid = session["UUID"]
+                    if session["date_stop"] is not None:
+                        continue
 
-                if uuid not in PC_MONITOR:
-                    continue
+                    uuid = session["UUID"]
 
-                PC_MONITOR[uuid]["status"] = "session"
+                    if uuid not in PC_MONITOR:
+                        continue
 
-                PC_MONITOR[uuid]["guest_id"] = session["guest_id"]
+                    PC_MONITOR[uuid]["status"] = "session"
 
-                PC_MONITOR[uuid]["date_start"] = session["date_start"]
+                    PC_MONITOR[uuid]["guest_id"] = session["guest_id"]
+
+                    PC_MONITOR[uuid]["date_start"] = session["date_start"]
 
             sessions_count = sum(
                 1
