@@ -22,6 +22,8 @@ from langame_api import (
     get_working_shifts
 )
 
+from utils.pc_monitor import monitor_pcs
+
 from utils.show_pc_card import show_pc_card
 
 from utils.pc_status import (
@@ -527,9 +529,11 @@ async def club_history(
 
 async def main():
 
-    await dp.start_polling(
-        bot
+    asyncio.create_task(
+        monitor_pcs()
     )
+
+    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
