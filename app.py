@@ -10,7 +10,6 @@ from aiogram.types import ReplyKeyboardRemove
 
 from langame_api import (
     get_clubs,
-    get_routes,
     get_products,
     pc_manage,
     get_pc_types,
