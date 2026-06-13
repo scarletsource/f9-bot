@@ -8,6 +8,22 @@ headers = {
     "X-Api-Key": API_KEY
 }
 
+def get_busy_pcs():
+
+    data = get_guest_sessions()
+
+    busy = []
+
+    for session in data["data"]:
+
+        if session["date_stop"] is None:
+
+            busy.append(
+                session["UUID"]
+            )
+
+    return busy
+
 def get_guest_sessions():
 
     response = requests.get(
