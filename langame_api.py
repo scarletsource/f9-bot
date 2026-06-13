@@ -33,6 +33,7 @@ def get_guest_sessions():
 
     return response.json()
 
+
 def get_busy_pcs():
 
     data = get_guest_sessions()
