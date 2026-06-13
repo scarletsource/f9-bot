@@ -74,9 +74,15 @@ async def testpc(message: Message):
 
     data = get_pc_linking()
 
-    await message.answer(
-        str(data["data"][0])
-    )
+    for pc in data["data"]:
+
+        if pc["UUID"] == "8D86A6F1-E7A8-4719-A6A3-047C16E99DFA":
+
+            await message.answer(
+                str(pc)
+            )
+
+            break
 
 @dp.message(Command("sessions"))
 async def sessions(message: Message):
