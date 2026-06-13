@@ -177,3 +177,11 @@ def get_working_shifts():
         "status_code": response.status_code,
         "text": response.text
     }
+
+def get_monitor_status(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "shutdown"
+
+    return PC_MONITOR[uuid]["status"]
