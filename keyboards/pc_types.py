@@ -1,6 +1,8 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from utils.pc_monitor import get_all_zones
+from utils.pc_monitor import (
+    get_all_zones
+)
 
 
 def pc_types_menu():
@@ -27,6 +29,8 @@ def pc_types_menu():
 
     )
 
-    builder.adjust(1)
+    builder.adjust(
+        1
+    )
 
     return builder.as_markup()
