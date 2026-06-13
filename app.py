@@ -323,7 +323,7 @@ async def confirm_action(callback: CallbackQuery):
         )
 
         # Отправка команды в LANGame
-    response = pc_manage(
+       response = pc_manage(
         commands[action],
         uuid
     )
@@ -332,21 +332,21 @@ async def confirm_action(callback: CallbackQuery):
         uuid,
         names[action]
     )
-    
+
     pc_name = "Неизвестно"
 
     data_pc = get_pc_linking()
 
     for pc in data_pc["data"]:
 
-    if pc["UUID"] == uuid:
+        if pc["UUID"] == uuid:
 
-        pc_name = pc["name"]
+            pc_name = pc["name"]
 
-        break
-        
+            break
+
     add_club_history(
-    f"{names[action]} | ПК-{int(pc_name):02}"
+        f"{names[action]} | ПК-{int(pc_name):02}"
     )
 
     await callback.message.edit_text(
@@ -354,8 +354,6 @@ async def confirm_action(callback: CallbackQuery):
         f"Действие:\n{names[action]}",
         reply_markup=result_menu()
     )
-
-    await callback.answer()
 @dp.callback_query(lambda c: c.data == "cancel_action")
 async def cancel_action(callback: CallbackQuery):
 
