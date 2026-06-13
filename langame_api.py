@@ -1,9 +1,6 @@
 import os
-import requests
 import time
-
-SESSIONS_CACHE = []
-LAST_UPDATE = 0
+import requests
 
 BASE_URL = os.getenv("LANGAME_URL")
 API_KEY = os.getenv("LANGAME_API_KEY")
@@ -12,6 +9,11 @@ headers = {
     "X-Api-Key": API_KEY
 }
 
+# Кэш активных сессий
+SESSIONS_CACHE = []
+LAST_UPDATE = 0
+
+
 def get_cached_sessions():
 
     global SESSIONS_CACHE
@@ -19,6 +21,7 @@ def get_cached_sessions():
 
     now = time.time()
 
+    # Обновляем кэш раз в 5 секунд
     if now - LAST_UPDATE > 5:
 
         response = requests.get(
@@ -28,11 +31,24 @@ def get_cached_sessions():
 
         data = response.json()
 
-        SESSIONS_CACHE = data["data"]
+        if data["status"]:
 
-        LAST_UPDATE = now
+            SESSIONS_CACHE = data["data"]
+
+            LAST_UPDATE = now
 
     return SESSIONS_CACHE
+
+
+def get_guest_sessions():
+
+    response = requests.get(
+        f"{BASE_URL}/guests/sessions",
+        headers=headers
+    )
+
+    return response.json()
+
 
 def get_busy_pcs():
 
@@ -50,6 +66,7 @@ def get_busy_pcs():
 
     return busy
 
+
 def get_pc_session(uuid):
 
     sessions = get_cached_sessions()
@@ -65,16 +82,6 @@ def get_pc_session(uuid):
 
     return None
 
-from datetime import datetime
-
-def get_guest_sessions():
-
-    response = requests.get(
-        f"{BASE_URL}/guests/sessions",
-        headers=headers
-    )
-
-    return response.json()
 
 def get_clubs():
 
@@ -100,7 +107,6 @@ def get_routes():
         "text": response.text
     }
 
-    return response.json()
 
 def get_products():
 
@@ -111,18 +117,6 @@ def get_products():
 
     return response.json()
 
-
-def get_pc_list():
-
-    response = requests.get(
-        f"{BASE_URL}/pc/list",
-        headers=headers
-    )
-
-    return {
-        "status_code": response.status_code,
-        "text": response.text
-    }
 
 def pc_manage(command, uuid):
 
@@ -139,6 +133,7 @@ def pc_manage(command, uuid):
     )
 
     return response.json()
+
 
 def get_pc_types():
 
@@ -161,6 +156,7 @@ def get_pc_linking():
     )
 
     return response.json()
+
 
 def get_adminconsole():
 
