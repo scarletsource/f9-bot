@@ -168,39 +168,39 @@ async def pc_selected(callback: CallbackQuery):
             )
 
             break
-            
-            history = get_history(uuid)
 
-history_text = ""
+    history = get_history(uuid)
 
-for item in history:
+    history_text = ""
 
-    history_text += f"{item}\n"
+    for item in history:
 
-if history_text == "":
+        history_text += f"{item}\n"
 
-    history_text = "Нет данных"
+    if history_text == "":
+
+        history_text = "Нет данных"
 
     text = (
-    f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
+        f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
 
-    f"📊 Статус\n"
-    f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
+        f"📊 Статус\n"
+        f"{get_status_icon(uuid)} {get_status_name(uuid)}\n\n"
 
-    f"📍 Зона\n"
-    f"{zone_name}\n\n"
+        f"📍 Зона\n"
+        f"{zone_name}\n\n"
 
-    f"👤 Пользователь\n"
-    f"Свободен\n\n"
+        f"👤 Пользователь\n"
+        f"Свободен\n\n"
 
-    f"📜 История действий\n"
-    f"{history_text}\n"
+        f"📜 История действий\n"
+        f"{history_text}\n"
 
-    f"🆔 UUID\n"
-    f"<code>{uuid}</code>\n\n"
+        f"🆔 UUID\n"
+        f"<code>{uuid}</code>\n\n"
 
-    "━━━━━━━━━━━━━━"
-)
+        "━━━━━━━━━━━━━━"
+    )
 
     await callback.message.edit_text(
         text,
