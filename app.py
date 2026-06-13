@@ -175,6 +175,7 @@ async def pc_action(callback: CallbackQuery):
     )
 
     await callback.answer()
+    
 @dp.callback_query(lambda c: c.data.startswith("confirm_"))
 async def confirm_action(callback: CallbackQuery):
 
