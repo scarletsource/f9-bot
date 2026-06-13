@@ -5,6 +5,16 @@ from langame_api import get_pc_linking
 
 PC_MONITOR = {}
 
+
+def get_monitor_status(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "shutdown"
+
+    return PC_MONITOR[uuid]["status"]
+
+
 async def monitor_pcs():
 
     while True:
@@ -13,18 +23,16 @@ async def monitor_pcs():
 
             data = get_pc_linking()
 
-            print()
-            print("========== ПК КЛУБА ==========")
-
             for pc in data["data"]:
 
-                print(
-                    pc["name"],
-                    pc["UUID"]
-                )
+                uuid = pc["UUID"]
 
-            print("=============================")
-            print()
+                PC_MONITOR[uuid] = {
+                    "status": "free",
+                    "last_seen": time.time()
+                }
+
+            print("ПК в памяти:", len(PC_MONITOR))
 
         except Exception as e:
 
