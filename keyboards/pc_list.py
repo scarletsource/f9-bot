@@ -1,6 +1,22 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from utils.pc_status import get_status_icon
+from utils.pc_monitor import get_monitor_status
 
+def get_status_icon(uuid):
+
+    status = get_monitor_status(uuid)
+
+    icons = {
+        "free": "🟢",
+        "session": "🔵",
+        "tech": "🟡",
+        "manual_unlock": "🟣",
+        "busy": "🟠",
+        "poweroff": "🔴",
+        "shutdown": "⚫",
+        "error": "🚨"
+    }
+
+    return icons.get(status, "⚪")
 
 def pc_list_menu(pcs):
 
