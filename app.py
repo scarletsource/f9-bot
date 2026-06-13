@@ -12,7 +12,6 @@ from langame_api import (
     get_clubs,
     get_routes,
     get_products,
-    get_pc_list,
     pc_manage,
     get_pc_types,
     get_pc_linking,
@@ -68,15 +67,6 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
     
-@dp.message(Command("pclist"))
-async def pclist(message: Message):
-
-    data = get_pc_list()
-
-    await message.answer(
-        str(data)[:4000]
-    )
-
 @dp.message(Command("sessions"))
 async def sessions(message: Message):
 
@@ -292,10 +282,12 @@ async def pc_selected(callback: CallbackQuery):
         f"{zone_name}\n\n"
 
         f"👤 Пользователь\n"
-        f"Свободен\n\n"
+        f"{get_pc_user(uuid)}\n\n"
+
+        f"⏳ Время игры\n"
+        f"{get_pc_play_time(uuid)}\n\n"
 
         f"📜 История действий\n"
-        f"{history_text}\n"
         
         f"🆔 UUID\n"
         f"<code>{uuid}</code>\n\n"
@@ -411,7 +403,7 @@ async def confirm_action(callback: CallbackQuery):
             "busy"
         )
 
-        # Отправка команды в LANGame
+    # Отправка команды в LANGame
     response = pc_manage(
         commands[action],
         uuid
