@@ -218,3 +218,7 @@ async def monitor_pcs():
             )
 
         await asyncio.sleep(5)
+
+def get_all_pcs():
+
+    return PC_MONITOR
