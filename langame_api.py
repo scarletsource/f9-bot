@@ -153,3 +153,13 @@ def get_guest_logs():
     )
 
     return response.json()
+
+def get_all_operations_log():
+
+    response = requests.get(
+        f"{BASE_URL}/all_operations_log/list",
+        headers=headers
+    )
+
+    return response.json()
+    
