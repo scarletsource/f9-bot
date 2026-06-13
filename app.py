@@ -251,6 +251,8 @@ elif action == "reboot":
         uuid
     )
 
+    await callback.answer()
+
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
         f"Действие:\n{names[action]}",
