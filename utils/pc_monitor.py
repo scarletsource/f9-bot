@@ -11,6 +11,11 @@ from langame_api import (
 PC_MONITOR = {}
 
 
+def get_pc_by_uuid(uuid):
+
+    return PC_MONITOR.get(uuid)
+
+
 def get_all_pcs():
 
     return PC_MONITOR
@@ -29,105 +34,48 @@ def get_all_zones():
     return zones
 
 
-def get_monitor_status(uuid):
-
-    if uuid not in PC_MONITOR:
-
-        return "shutdown"
-
-    return PC_MONITOR[uuid]["status"]
-
-
-def set_monitor_status(uuid, status):
-
-    if uuid not in PC_MONITOR:
-
-        return
-
-    PC_MONITOR[uuid]["status"] = status
-
-
 def get_monitor_pc_name(uuid):
 
-    if uuid not in PC_MONITOR:
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
 
         return "Неизвестно"
 
-    return PC_MONITOR[uuid]["pc_name"]
+    return pc["pc_name"]
 
 
 def get_monitor_zone_name(uuid):
 
-    if uuid not in PC_MONITOR:
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
 
         return "Неизвестно"
 
-    return PC_MONITOR[uuid]["zone_name"]
+    return pc["zone_name"]
 
 
 def get_monitor_guest(uuid):
 
-    if uuid not in PC_MONITOR:
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
 
         return None
 
-    return PC_MONITOR[uuid]["guest_id"]
+    return pc["guest_id"]
 
 
 def get_monitor_play_time(uuid):
 
-    def set_power_state(uuid, state):
+    pc = get_pc_by_uuid(uuid)
 
-    if uuid not in PC_MONITOR:
-        return
-
-    PC_MONITOR[uuid]["power_state"] = state
-
-
-def set_mode_state(uuid, state):
-
-    if uuid not in PC_MONITOR:
-        return
-
-    PC_MONITOR[uuid]["mode_state"] = state
-
-
-def set_action_state(uuid, state):
-
-    if uuid not in PC_MONITOR:
-        return
-
-    PC_MONITOR[uuid]["action_state"] = state
-
-
-def get_power_state(uuid):
-
-    if uuid not in PC_MONITOR:
-        return "offline"
-
-    return PC_MONITOR[uuid]["power_state"]
-
-
-def get_mode_state(uuid):
-
-    if uuid not in PC_MONITOR:
-        return "normal"
-
-    return PC_MONITOR[uuid]["mode_state"]
-
-
-def get_action_state(uuid):
-
-    if uuid not in PC_MONITOR:
-        return "none"
-
-    return PC_MONITOR[uuid]["action_state"]
-
-    if uuid not in PC_MONITOR:
+    if pc is None:
 
         return "-"
 
-    start_time = PC_MONITOR[uuid]["date_start"]
+    start_time = pc["date_start"]
 
     if start_time is None:
 
@@ -153,6 +101,72 @@ def get_action_state(uuid):
         return "-"
 
 
+#
+# Состояние питания
+#
+
+def set_power_state(uuid, state):
+
+    if uuid in PC_MONITOR:
+
+        PC_MONITOR[uuid]["power_state"] = state
+
+
+def get_power_state(uuid):
+
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
+
+        return "offline"
+
+    return pc["power_state"]
+
+
+#
+# Режим
+#
+
+def set_mode_state(uuid, state):
+
+    if uuid in PC_MONITOR:
+
+        PC_MONITOR[uuid]["mode_state"] = state
+
+
+def get_mode_state(uuid):
+
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
+
+        return "normal"
+
+    return pc["mode_state"]
+
+
+#
+# Действие
+#
+
+def set_action_state(uuid, state):
+
+    if uuid in PC_MONITOR:
+
+        PC_MONITOR[uuid]["action_state"] = state
+
+
+def get_action_state(uuid):
+
+    pc = get_pc_by_uuid(uuid)
+
+    if pc is None:
+
+        return "none"
+
+    return pc["action_state"]
+
+
 async def monitor_pcs():
 
     while True:
@@ -165,7 +179,10 @@ async def monitor_pcs():
 
             sessions_data = get_guest_sessions()
 
-            # сбрасываем игровые сессии
+            #
+            # Сбрасываем игровые сессии
+            #
+
             for uuid in PC_MONITOR:
 
                 PC_MONITOR[uuid]["session_state"] = False
@@ -174,12 +191,10 @@ async def monitor_pcs():
 
                 PC_MONITOR[uuid]["date_start"] = None
 
-                # статус session сбрасываем
-                if PC_MONITOR[uuid]["status"] == "session":
+            #
+            # Обновляем список ПК
+            #
 
-                    PC_MONITOR[uuid]["status"] = "free"
-
-            # обновляем список ПК
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
@@ -206,23 +221,36 @@ async def monitor_pcs():
 
                         "zone_name": zone_name,
 
+                        #
+                        # Игровая сессия
+                        #
+
+                        "session_state": False,
+
                         "guest_id": None,
 
                         "date_start": None,
 
-                        # новые состояния
-                        "session_state": False,
+                        #
+                        # Питание
+                        #
 
                         "power_state": "online",
 
+                        #
+                        # Режим
+                        #
+
                         "mode_state": "normal",
+
+                        #
+                        # Текущее действие
+                        #
 
                         "action_state": "none",
 
-                        # старое поле для совместимости
-                        "status": "free",
-
                         "last_seen": time.time()
+
                     }
 
                 else:
@@ -237,7 +265,10 @@ async def monitor_pcs():
 
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
-            # отмечаем игровые сессии
+            #
+            # Активные игровые сессии
+            #
+
             if sessions_data["status"]:
 
                 for session in sessions_data["data"]:
@@ -258,11 +289,6 @@ async def monitor_pcs():
 
                     PC_MONITOR[uuid]["date_start"] = session["date_start"]
 
-                    # статус session только если ПК не в спецрежиме
-                    if PC_MONITOR[uuid]["status"] == "free":
-
-                        PC_MONITOR[uuid]["status"] = "session"
-
             sessions_count = sum(
 
                 1
@@ -276,15 +302,18 @@ async def monitor_pcs():
             print(
 
                 f"ПК в памяти: {len(PC_MONITOR)} | "
-                f"На игровых сессиях: {sessions_count}"
+                f"Игровых сессий: {sessions_count}"
 
             )
 
         except Exception as e:
 
             print(
+
                 "ОШИБКА МОНИТОРА:",
+
                 e
+
             )
 
         await asyncio.sleep(5)
