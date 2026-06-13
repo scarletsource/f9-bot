@@ -182,7 +182,6 @@ if history_text == "":
     history_text = "Нет данных"
 
     text = (
-        
     f"🖥 <b>ПК-{int(pc_name):02}</b>\n\n"
 
     f"📊 Статус\n"
