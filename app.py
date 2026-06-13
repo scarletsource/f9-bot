@@ -205,34 +205,46 @@ async def confirm_action(callback: CallbackQuery):
     }
 
     if action == "techstart":
-        set_status(
-            uuid,
-            "tech"
-        )
+    set_status(
+        uuid,
+        "tech"
+    )
 
-    elif action == "unlock":
-        set_status(
-            uuid,
-            "manual_unlock"
-        )
+elif action == "techstop":
+    set_status(
+        uuid,
+        "free"
+    )
 
-    elif action == "poweroff":
-        set_status(
-            uuid,
-            "poweroff"
-        )
+elif action == "unlock":
+    set_status(
+        uuid,
+        "manual_unlock"
+    )
 
-    elif action == "poweron":
-        set_status(
-            uuid,
-            "free"
-        )
+elif action == "lock":
+    set_status(
+        uuid,
+        "free"
+    )
 
-    elif action == "reboot":
-        set_status(
-            uuid,
-            "busy"
-        )
+elif action == "poweroff":
+    set_status(
+        uuid,
+        "poweroff"
+    )
+
+elif action == "poweron":
+    set_status(
+        uuid,
+        "free"
+    )
+
+elif action == "reboot":
+    set_status(
+        uuid,
+        "busy"
+    )
 
     data = pc_manage(
         commands[action],
