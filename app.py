@@ -63,6 +63,28 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
+@dp.message(Command("checkpc"))
+async def checkpc(message: Message):
+
+    from langame_api import get_pc_linking, get_guest_sessions
+
+    pcs = get_pc_linking()
+    sessions = get_guest_sessions()
+
+    text = ""
+
+    for pc in pcs["data"]:
+
+        if pc["packets_type_PC"] == 3:
+
+            text += (
+                f"ПК-{pc['name']}\n"
+                f"{pc['UUID']}\n\n"
+            )
+
+    await message.answer(
+        text[:4000]
+    )
 
 @dp.message(Command("adminconsole"))
 async def adminconsole(message: Message):
