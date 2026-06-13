@@ -13,16 +13,6 @@ PC_MONITOR = {}
 
 def get_monitor_status(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return "shutdown"
 
@@ -31,16 +21,6 @@ for zone in types_data:
 
 def get_monitor_guest(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return None
 
@@ -49,34 +29,22 @@ for zone in types_data:
 
 def get_monitor_pc_name(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return "Неизвестно"
 
     return PC_MONITOR[uuid]["pc_name"]
 
 
+def get_monitor_zone_name(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "Неизвестно"
+
+    return PC_MONITOR[uuid]["zone_name"]
+
+
 def get_monitor_fiscal_name(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return "-"
 
@@ -85,112 +53,22 @@ for zone in types_data:
 
 def get_monitor_type(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return None
 
     return PC_MONITOR[uuid]["type_id"]
 
-def get_monitor_pc_name(uuid):
-
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
-    if uuid not in PC_MONITOR:
-
-        return "Неизвестно"
-
-    return PC_MONITOR[uuid]["pc_name"]
-
-
-def get_monitor_zone_name(uuid):
-
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
-    if uuid not in PC_MONITOR:
-
-        return "Неизвестно"
-
-    return PC_MONITOR[uuid]["zone_name"]
-
-
-def get_monitor_fiscal_name(uuid):
-
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
-    if uuid not in PC_MONITOR:
-
-        return "-"
-
-    return PC_MONITOR[uuid]["fiscal_name"]
 
 def get_monitor_start_time(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return "-"
 
-    start_time = PC_MONITOR[uuid]["date_start"]
-
-    if start_time is None:
-        return "-"
-
-    return start_time
+    return PC_MONITOR[uuid]["date_start"]
 
 
 def get_monitor_play_time(uuid):
 
-zone_name = "Неизвестно"
-
-for zone in types_data:
-
-    if zone["id"] == pc["packets_type_PC"]:
-
-        zone_name = zone["name"]
-
-        break
-    
     if uuid not in PC_MONITOR:
         return "-"
 
@@ -228,10 +106,10 @@ async def monitor_pcs():
             data = get_pc_linking()
 
             types_data = get_pc_types()["data"]
-            
+
             sessions_data = get_guest_sessions()
 
-            # Сбрасываем все статусы
+            # Сбрасываем статусы
             for uuid in PC_MONITOR:
 
                 PC_MONITOR[uuid]["status"] = "free"
@@ -245,26 +123,37 @@ async def monitor_pcs():
 
                 uuid = pc["UUID"]
 
+                zone_name = "Неизвестно"
+
+                for zone in types_data:
+
+                    if zone["id"] == pc["packets_type_PC"]:
+
+                        zone_name = zone["name"]
+
+                        break
+
                 if uuid not in PC_MONITOR:
 
-                   PC_MONITOR[uuid] = {
+                    PC_MONITOR[uuid] = {
 
-    "pc_name": pc["name"],
+                        "pc_name": pc["name"],
 
-    "fiscal_name": pc["fiscal_name"],
+                        "fiscal_name": pc["fiscal_name"],
 
-    "type_id": pc["packets_type_PC"],
+                        "type_id": pc["packets_type_PC"],
 
-    "zone_name": zone_name,
+                        "zone_name": zone_name,
 
-    "guest_id": None,
+                        "guest_id": None,
 
-    "date_start": None,
+                        "date_start": None,
 
-    "status": "free",
+                        "status": "free",
 
-    "last_seen": time.time()
-}
+                        "last_seen": time.time()
+                    }
+
                 else:
 
                     PC_MONITOR[uuid]["pc_name"] = pc["name"]
@@ -275,6 +164,7 @@ async def monitor_pcs():
 
                     PC_MONITOR[uuid]["zone_name"] = zone_name
 
+                    PC_MONITOR[uuid]["last_seen"] = time.time()
 
             # Отмечаем активные сессии
             if sessions_data["status"]:
