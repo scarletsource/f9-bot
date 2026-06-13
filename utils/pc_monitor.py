@@ -76,6 +76,53 @@ def get_monitor_guest(uuid):
 
 def get_monitor_play_time(uuid):
 
+    def set_power_state(uuid, state):
+
+    if uuid not in PC_MONITOR:
+        return
+
+    PC_MONITOR[uuid]["power_state"] = state
+
+
+def set_mode_state(uuid, state):
+
+    if uuid not in PC_MONITOR:
+        return
+
+    PC_MONITOR[uuid]["mode_state"] = state
+
+
+def set_action_state(uuid, state):
+
+    if uuid not in PC_MONITOR:
+        return
+
+    PC_MONITOR[uuid]["action_state"] = state
+
+
+def get_power_state(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "offline"
+
+    return PC_MONITOR[uuid]["power_state"]
+
+
+def get_mode_state(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "normal"
+
+    return PC_MONITOR[uuid]["mode_state"]
+
+
+def get_action_state(uuid):
+
+    if uuid not in PC_MONITOR:
+        return "none"
+
+    return PC_MONITOR[uuid]["action_state"]
+
     if uuid not in PC_MONITOR:
 
         return "-"
