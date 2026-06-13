@@ -10,6 +10,8 @@ FILE_NAME = os.path.join(
     "pc_status.json"
 )
 
+print("STATUS FILE =", FILE_NAME)
+
 def load_statuses():
 
     if not os.path.exists(FILE_NAME):
@@ -39,20 +41,23 @@ def set_status(uuid, status):
     statuses[uuid] = status
 
     save_statuses(statuses)
-    
+
+    print("SAVE")
     print(FILE_NAME)
-    
     print(statuses)
 
 def get_status(uuid):
 
     statuses = load_statuses()
 
+    print("LOAD")
+    print(FILE_NAME)
+    print(statuses)
+
     return statuses.get(
         uuid,
         "free"
     )
-
 
 def get_status_icon(uuid):
 
