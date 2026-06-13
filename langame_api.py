@@ -16,6 +16,22 @@ def get_guest_sessions():
     )
 
     return response.json()
+
+def get_busy_pcs():
+
+    data = get_guest_sessions()
+
+    busy = []
+
+    for session in data["data"]:
+
+        if session["date_stop"] is None:
+
+            busy.append(
+                session["UUID"]
+            )
+
+    return busy
     
 def get_clubs():
 
