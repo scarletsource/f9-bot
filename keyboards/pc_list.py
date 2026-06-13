@@ -14,6 +14,10 @@ def pc_list_menu(pcs):
         icon = get_status_icon(
             pc["UUID"]
         )
+        
+print(pc["name"])
+print(pc["UUID"])
+print(get_status(pc["UUID"]))
 
         builder.button(
             text=f"{icon} PC-{pc['name']}",
