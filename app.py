@@ -323,26 +323,27 @@ async def confirm_action(callback: CallbackQuery):
         )
 
     # Отправка команды в LANGame
-    response = pc_manage(
-        commands[action],
-        uuid
-    )
-    
-    add_history(
-    uuid,
-    names[action]
+response = pc_manage(
+    commands[action],
+    uuid
+)
+
+add_history(
+uuid,
+names[action]
 )
 
   add_club_history(
     f"{names[action]} | {uuid[:4]}"
 )
-    await callback.message.edit_text(
-        f"✅ Команда успешно отправлена\n\n"
-        f"Действие:\n{names[action]}",
-        reply_markup=result_menu()
-    )
 
-    await callback.answer()
+await callback.message.edit_text(
+    f"✅ Команда успешно отправлена\n\n"
+    f"Действие:\n{names[action]}",
+    reply_markup=result_menu()
+)
+
+await callback.answer()
 
 @dp.callback_query(lambda c: c.data == "cancel_action")
 async def cancel_action(callback: CallbackQuery):
