@@ -7,7 +7,7 @@ def confirm_menu(action, uuid):
 
     builder.button(
         text="✅ Подтвердить",
-        callback_data="confirm_action"
+        callback_data=f"confirm_{action}_{uuid}"
     )
 
     builder.button(
