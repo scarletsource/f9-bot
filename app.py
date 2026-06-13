@@ -47,6 +47,7 @@ from keyboards.pc_list import pc_list_menu
 from keyboards.pc_actions import pc_actions_menu
 from keyboards.club_history_menu import club_history_menu
 
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(
@@ -70,40 +71,6 @@ async def start(message: Message):
         reply_markup=main_menu()
     )
 
-@dp.message(Command("pctypesjson"))
-async def pctypesjson(message: Message):
-
-    import json
-
-    data = get_pc_types()
-
-    with open(
-        "pctypes.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
-
-    file = FSInputFile(
-        "pctypes.json"
-    )
-
-    await message.answer_document(file)
-
-@dp.message(Command("guestlogs"))
-async def guestlogs(message: Message):
-
-    data = get_guest_logs()
-
-    await message.answer(
-        str(data)[:4000]
-    )
 
 @dp.message(Command("operations"))
 async def operations(message: Message):
@@ -114,6 +81,7 @@ async def operations(message: Message):
         str(data)[:4000]
     )
 
+
 @dp.message(Command("shifts"))
 async def shifts(message: Message):
 
@@ -123,12 +91,13 @@ async def shifts(message: Message):
         str(data)[:4000]
     )
 
+
 @dp.message(Command("guestlogs"))
 async def guestlogs(message: Message):
 
-    data = get_guest_logs()
-
     import json
+
+    data = get_guest_logs()
 
     with open(
         "guest_logs.json",
@@ -150,36 +119,14 @@ async def guestlogs(message: Message):
     await message.answer_document(
         file
     )
-    
-@dp.message(Command("checkpc"))
-async def checkpc(message: Message):
 
-    from langame_api import get_pc_linking, get_guest_sessions
-
-    pcs = get_pc_linking()
-    sessions = get_guest_sessions()
-
-    text = ""
-
-    for pc in pcs["data"]:
-
-        if pc["packets_type_PC"] == 3:
-
-            text += (
-                f"ПК-{pc['name']}\n"
-                f"{pc['UUID']}\n\n"
-            )
-
-    await message.answer(
-        text[:4000]
-    )
 
 @dp.message(Command("adminconsole"))
 async def adminconsole(message: Message):
 
-    data = get_adminconsole()
-
     import json
+
+    data = get_adminconsole()
 
     with open(
         "adminconsole.json",
@@ -200,46 +147,6 @@ async def adminconsole(message: Message):
 
     await message.answer_document(
         file
-    )
-
-
-@dp.message(Command("pctypes"))
-async def pctypes(message: Message):
-
-    data = get_pc_types()
-
-    await message.answer(
-        str(data)[:4000]
-    )
-
-
-@dp.message(Command("pclinking"))
-async def pclinking(message: Message):
-
-    data = get_pc_linking()
-
-    import json
-
-    with open(
-        "pcs.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=4
-        )
-
-    file = FSInputFile(
-        "pcs.json"
-    )
-
-    await message.answer_document(
-        file,
-        caption="Список ПК"
     )
 
 
@@ -298,6 +205,7 @@ async def show_pcs(
 
     await callback.answer()
 
+
 @dp.callback_query(
     lambda c: c.data == "back_main"
 )
@@ -327,7 +235,9 @@ async def pc_selected(
     )
 
     await callback.message.edit_text(
-        show_pc_card(uuid),
+        show_pc_card(
+            uuid
+        ),
         reply_markup=pc_actions_menu(
             uuid
         ),
@@ -375,7 +285,6 @@ async def pc_action(
 
     await callback.answer()
 
-
 @dp.callback_query(
     lambda c: c.data.startswith("confirm_")
 )
@@ -413,55 +322,56 @@ async def confirm_action(
         "techstop": "🛠 Тех стоп"
     }
 
-if action == "techstart":
+    # Меняем локальный статус
+    if action == "techstart":
 
-    set_monitor_status(
-        uuid,
-        "tech"
-    )
+        set_monitor_status(
+            uuid,
+            "tech"
+        )
 
-elif action == "techstop":
+    elif action == "techstop":
 
-    set_monitor_status(
-        uuid,
-        "free"
-    )
+        set_monitor_status(
+            uuid,
+            "free"
+        )
 
-elif action == "unlock":
+    elif action == "unlock":
 
-    set_monitor_status(
-        uuid,
-        "manual_unlock"
-    )
+        set_monitor_status(
+            uuid,
+            "manual_unlock"
+        )
 
-elif action == "lock":
+    elif action == "lock":
 
-    set_monitor_status(
-        uuid,
-        "free"
-    )
+        set_monitor_status(
+            uuid,
+            "free"
+        )
 
-elif action == "poweroff":
+    elif action == "poweroff":
 
-    set_monitor_status(
-        uuid,
-        "poweroff"
-    )
+        set_monitor_status(
+            uuid,
+            "poweroff"
+        )
 
-elif action == "poweron":
+    elif action == "poweron":
 
-    set_monitor_status(
-        uuid,
-        "free"
-    )
+        set_monitor_status(
+            uuid,
+            "free"
+        )
 
-elif action == "reboot":
+    elif action == "reboot":
 
-    set_monitor_status(
-        uuid,
-        "busy"
-    )
-    
+        set_monitor_status(
+            uuid,
+            "busy"
+        )
+
     response = pc_manage(
         commands[action],
         uuid
@@ -473,9 +383,17 @@ elif action == "reboot":
     )
 
     pc_name = get_monitor_pc_name(
-    uuid
-)
-    
+        uuid
+    )
+
+    try:
+
+        pc_number = int(pc_name)
+
+    except:
+
+        pc_number = 0
+
     club_names = {
         "reboot": "🔄 ПК-{:02} перезагружен",
         "poweron": "⚡ ПК-{:02} включен",
@@ -487,9 +405,11 @@ elif action == "reboot":
     }
 
     add_club_history(
+
         club_names[action].format(
-            int(pc_name)
+            pc_number
         )
+
     )
 
     await callback.message.edit_text(
@@ -560,7 +480,9 @@ async def main():
         monitor_pcs()
     )
 
-    await dp.start_polling(bot)
+    await dp.start_polling(
+        bot
+    )
 
 
 if __name__ == "__main__":
