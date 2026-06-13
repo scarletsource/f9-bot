@@ -326,9 +326,8 @@ async def confirm_action(callback: CallbackQuery):
     names[action]
 )
 
-    add_history(
-    uuid,
-    names[action]
+  add_club_history(
+    f"{names[action]} | {uuid[:4]}"
 )
     await callback.message.edit_text(
         f"✅ Команда успешно отправлена\n\n"
@@ -348,6 +347,30 @@ async def cancel_action(callback: CallbackQuery):
 
     await callback.answer()
 
+@dp.callback_query(lambda c: c.data == "club_history")
+async def club_history(callback: CallbackQuery):
+
+    history = get_club_history()
+
+    text = "📋 <b>Последние действия клуба</b>\n\n"
+
+    if len(history) == 0:
+
+        text += "Нет данных"
+
+    else:
+
+        for item in history:
+
+            text += f"• {item}\n"
+
+    await callback.message.edit_text(
+        text,
+        reply_markup=main_menu(),
+        parse_mode="HTML"
+    )
+
+    await callback.answer()
 
 async def main():
     await dp.start_polling(bot)
