@@ -33,6 +33,14 @@ def get_routes():
         "text": response.text
     }
 
+def get_adminconsole():
+
+    response = requests.get(
+        f"{BASE_URL}/ver/get_adminconsole",
+        headers=headers
+    )
+
+    return response.json()
 
 def get_products():
 
