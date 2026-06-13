@@ -185,3 +185,15 @@ def get_monitor_status(uuid):
         return "shutdown"
 
     return PC_MONITOR[uuid]["status"]
+
+def get_guest_logs():
+
+    response = requests.get(
+        f"{BASE_URL}/guests/logs",
+        headers=headers
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
