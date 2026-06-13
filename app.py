@@ -323,7 +323,7 @@ async def confirm_action(callback: CallbackQuery):
         )
 
         # Отправка команды в LANGame
-       response = pc_manage(
+    response = pc_manage(
         commands[action],
         uuid
     )
