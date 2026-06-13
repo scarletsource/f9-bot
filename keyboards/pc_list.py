@@ -43,13 +43,23 @@ def pc_list_menu(pcs):
 
     for pc in pcs:
 
+        try:
+
+            pc_name = f"{int(pc['name']):02}"
+
+        except:
+
+            pc_name = str(
+                pc["name"]
+            )
+
         icon = get_status_icon(
             pc["UUID"]
         )
 
         builder.button(
 
-            text=f"{icon} ПК-{int(pc['name']):02}",
+            text=f"{icon} ПК-{pc_name}",
 
             callback_data=f"pcid_{pc['UUID']}"
 
