@@ -22,7 +22,11 @@ from langame_api import (
     get_working_shifts
 )
 
-from utils.pc_monitor import monitor_pcs
+from utils.pc_monitor import (
+    monitor_pcs,
+    set_monitor_status,
+    get_monitor_pc_name
+)
 
 from utils.show_pc_card import show_pc_card
 
@@ -409,6 +413,55 @@ async def confirm_action(
         "techstop": "🛠 Тех стоп"
     }
 
+if action == "techstart":
+
+    set_monitor_status(
+        uuid,
+        "tech"
+    )
+
+elif action == "techstop":
+
+    set_monitor_status(
+        uuid,
+        "free"
+    )
+
+elif action == "unlock":
+
+    set_monitor_status(
+        uuid,
+        "manual_unlock"
+    )
+
+elif action == "lock":
+
+    set_monitor_status(
+        uuid,
+        "free"
+    )
+
+elif action == "poweroff":
+
+    set_monitor_status(
+        uuid,
+        "poweroff"
+    )
+
+elif action == "poweron":
+
+    set_monitor_status(
+        uuid,
+        "free"
+    )
+
+elif action == "reboot":
+
+    set_monitor_status(
+        uuid,
+        "busy"
+    )
+    
     response = pc_manage(
         commands[action],
         uuid
@@ -419,18 +472,10 @@ async def confirm_action(
         names[action]
     )
 
-    pc_name = "Неизвестно"
-
-    data_pc = get_pc_linking()
-
-    for pc in data_pc["data"]:
-
-        if pc["UUID"] == uuid:
-
-            pc_name = pc["name"]
-
-            break
-
+    pc_name = get_monitor_pc_name(
+    uuid
+)
+    
     club_names = {
         "reboot": "🔄 ПК-{:02} перезагружен",
         "poweron": "⚡ ПК-{:02} включен",
