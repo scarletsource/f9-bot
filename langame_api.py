@@ -40,15 +40,25 @@ def get_cached_sessions():
     return SESSIONS_CACHE
 
 
-def get_guest_sessions():
+import json
 
-    response = requests.get(
-        f"{BASE_URL}/guests/sessions",
-        headers=headers
-    )
+def get_pc_session(uuid):
 
-    return response.json()
+    sessions = get_cached_sessions()
 
+    for session in sessions:
+
+        if session["date_stop"] is None:
+
+            print(
+                json.dumps(
+                    session,
+                    ensure_ascii=False,
+                    indent=4
+                )
+            )
+
+    return None
 
 def get_busy_pcs():
 
