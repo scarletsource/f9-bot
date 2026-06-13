@@ -9,15 +9,32 @@ from langame_api import (
 PC_MONITOR = {}
 
 
-def get_monitor_status(uuid):
+def get_monitor_name(uuid):
 
     if uuid not in PC_MONITOR:
 
-        return "shutdown"
+        return "Неизвестно"
 
-    return PC_MONITOR[uuid]["status"]
+    return PC_MONITOR[uuid]["pc_name"]
 
 
+def get_monitor_fiscal_name(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return "-"
+
+    return PC_MONITOR[uuid]["fiscal_name"]
+
+
+def get_monitor_guest(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return None
+
+    return PC_MONITOR[uuid]["guest_id"]
+    
 async def monitor_pcs():
 
     while True:
