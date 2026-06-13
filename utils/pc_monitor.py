@@ -1,8 +1,10 @@
 import asyncio
 import time
 
-from langame_api import get_pc_linking
-from langame_api import get_busy_pcs
+from langame_api import (
+    get_pc_linking,
+    get_busy_pcs
+)
 
 PC_MONITOR = {}
 
@@ -30,26 +32,34 @@ async def monitor_pcs():
             print("ЗАНЯТЫЕ ПК:")
 
             for uuid in busy_pcs:
+
                 print(uuid)
 
-                print()
-            
+            print()
+
             for pc in data["data"]:
 
-    uuid = pc["UUID"]
+                uuid = pc["UUID"]
 
-    status = "free"
+                status = "free"
 
-    if uuid in busy_pcs:
-        status = "session"
+                if uuid in busy_pcs:
 
-    PC_MONITOR[uuid] = {
-        "pc_name": pc["name"],
-        "fiscal_name": pc["fiscal_name"],
-        "guest_id": None,
-        "status": status,
-        "last_seen": time.time()
-    }
+                    status = "session"
+
+                PC_MONITOR[uuid] = {
+
+                    "pc_name": pc["name"],
+
+                    "fiscal_name": pc["fiscal_name"],
+
+                    "guest_id": None,
+
+                    "status": status,
+
+                    "last_seen": time.time()
+                }
+
             sessions = sum(
                 1
                 for pc in PC_MONITOR.values()
@@ -61,26 +71,26 @@ async def monitor_pcs():
                 f"На сессии: {sessions}"
             )
 
+            print()
+            print("МОНИТОР:")
+
+            for uuid, pc in PC_MONITOR.items():
+
+                print(
+                    pc["pc_name"],
+                    "|",
+                    pc["fiscal_name"],
+                    "|",
+                    pc["status"]
+                )
+
+            print()
+
         except Exception as e:
 
             print(
                 "ОШИБКА МОНИТОРА:",
                 e
             )
-
-print()
-print("МОНИТОР:")
-
-for uuid, pc in PC_MONITOR.items():
-
-    print(
-        pc["pc_name"],
-        "|",
-        pc["fiscal_name"],
-        "|",
-        pc["status"]
-    )
-
-print()
 
         await asyncio.sleep(5)
