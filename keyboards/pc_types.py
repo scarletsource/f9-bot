@@ -5,6 +5,10 @@ from langame_api import (
     get_pc_linking
 )
 
+from utils.pc_monitor import (
+    PC_MONITOR
+)
+
 
 def pc_types_menu():
 
@@ -14,39 +18,71 @@ def pc_types_menu():
 
     pcs_data = get_pc_linking()["data"]
 
-    # считаем количество ПК каждого типа
-    pc_count = {}
+    total_count = {}
+    busy_count = {}
 
     for pc in pcs_data:
-
-        type_id = pc["packets_type_PC"]
 
         if pc["name"] is None:
             continue
 
-        pc_count[type_id] = pc_count.get(
+        type_id = pc["packets_type_PC"]
+
+        total_count[type_id] = total_count.get(
             type_id,
             0
         ) + 1
 
-    # создаем кнопки только для реально существующих зон
+        uuid = pc["UUID"]
+
+        if uuid in PC_MONITOR:
+
+            status = PC_MONITOR[uuid]["status"]
+
+            if status == "session":
+
+                busy_count[type_id] = busy_count.get(
+                    type_id,
+                    0
+                ) + 1
+
     for pc_type in types_data:
 
         type_id = pc_type["id"]
 
-        count = pc_count.get(
+        total = total_count.get(
             type_id,
             0
         )
 
-        # если ПК нет — не показываем зону
-        if count == 0:
+        if total == 0:
             continue
+
+        busy = busy_count.get(
+            type_id,
+            0
+        )
+
+        free = total - busy
 
         zone_name = pc_type["name"]
 
+        icon = "🖥"
+
+        if "VIP" in zone_name.upper():
+            icon = "👑"
+
+        elif "COMFORT" in zone_name.upper():
+            icon = "💎"
+
+        elif "TV" in zone_name.upper():
+            icon = "📺"
+
+        elif "STANDART" in zone_name.upper():
+            icon = "🎮"
+
         builder.button(
-            text=f"{zone_name} ({count})",
+            text=f"{icon} {zone_name} ({free}/{total})",
             callback_data=f"type_{type_id}"
         )
 
