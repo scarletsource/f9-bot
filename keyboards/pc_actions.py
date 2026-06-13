@@ -6,13 +6,18 @@ def pc_actions_menu(uuid):
     builder = InlineKeyboardBuilder()
 
     builder.button(
-        text="🔄 Перезагрузить",
+        text="🔄 Перезагрузка",
         callback_data=f"action_reboot_{uuid}"
     )
 
     builder.button(
         text="⚡ Включить",
         callback_data=f"action_poweron_{uuid}"
+    )
+
+    builder.button(
+        text="⛔ Выключить",
+        callback_data=f"action_poweroff_{uuid}"
     )
 
     builder.button(
@@ -26,17 +31,12 @@ def pc_actions_menu(uuid):
     )
 
     builder.button(
-        text="⛔ Выключить",
-        callback_data=f"action_poweroff_{uuid}"
-    )
-
-    builder.button(
         text="🛠 Тех старт",
         callback_data=f"action_techstart_{uuid}"
     )
 
     builder.button(
-        text="🛠 Тех стоп",
+        text="🟢 Тех стоп",
         callback_data=f"action_techstop_{uuid}"
     )
 
@@ -45,6 +45,6 @@ def pc_actions_menu(uuid):
         callback_data="pc"
     )
 
-    builder.adjust(2, 2, 2, 1, 1)
+    builder.adjust(2)
 
     return builder.as_markup()
