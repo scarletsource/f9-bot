@@ -1,20 +1,9 @@
-import time
+import asyncio
 
-PC_MONITOR = {}
+async def monitor_pcs():
 
+    while True:
 
-def update_pc(uuid, status):
+        print("МОНИТОР ОБНОВИЛСЯ")
 
-    PC_MONITOR[uuid] = {
-        "status": status,
-        "last_seen": time.time()
-    }
-
-
-def get_pc_status(uuid):
-
-    if uuid not in PC_MONITOR:
-
-        return "shutdown"
-
-    return PC_MONITOR[uuid]["status"]
+        await asyncio.sleep(5)
