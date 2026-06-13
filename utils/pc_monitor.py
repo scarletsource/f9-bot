@@ -10,6 +10,14 @@ from langame_api import (
 
 PC_MONITOR = {}
 
+def get_pc_by_uuid(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return None
+
+    return PC_MONITOR[uuid]
+
 def set_monitor_status(uuid, status):
 
     if uuid not in PC_MONITOR:
