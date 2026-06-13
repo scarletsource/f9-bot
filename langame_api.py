@@ -78,7 +78,13 @@ def get_pc_session(uuid):
 
     sessions = get_cached_sessions()
 
+    print()
+    print("ИЩЕМ UUID:", uuid)
+    print()
+
     for session in sessions:
+
+        print(session)
 
         if (
             session["UUID"] == uuid
