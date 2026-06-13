@@ -11,9 +11,28 @@ from langame_api import (
 PC_MONITOR = {}
 
 
+def get_all_pcs():
+
+    return PC_MONITOR
+
+
+def get_all_zones():
+
+    zones = {}
+
+    for pc in PC_MONITOR.values():
+
+        if pc["type_id"] not in zones:
+
+            zones[pc["type_id"]] = pc["zone_name"]
+
+    return zones
+
+
 def get_monitor_status(uuid):
 
     if uuid not in PC_MONITOR:
+
         return "shutdown"
 
     return PC_MONITOR[uuid]["status"]
@@ -22,22 +41,16 @@ def get_monitor_status(uuid):
 def set_monitor_status(uuid, status):
 
     if uuid not in PC_MONITOR:
+
         return
 
     PC_MONITOR[uuid]["status"] = status
 
 
-def get_monitor_guest(uuid):
-
-    if uuid not in PC_MONITOR:
-        return None
-
-    return PC_MONITOR[uuid]["guest_id"]
-
-
 def get_monitor_pc_name(uuid):
 
     if uuid not in PC_MONITOR:
+
         return "Неизвестно"
 
     return PC_MONITOR[uuid]["pc_name"]
@@ -46,43 +59,31 @@ def get_monitor_pc_name(uuid):
 def get_monitor_zone_name(uuid):
 
     if uuid not in PC_MONITOR:
+
         return "Неизвестно"
 
     return PC_MONITOR[uuid]["zone_name"]
 
 
-def get_monitor_fiscal_name(uuid):
+def get_monitor_guest(uuid):
 
     if uuid not in PC_MONITOR:
-        return "-"
 
-    return PC_MONITOR[uuid]["fiscal_name"]
-
-
-def get_monitor_type(uuid):
-
-    if uuid not in PC_MONITOR:
         return None
 
-    return PC_MONITOR[uuid]["type_id"]
-
-
-def get_monitor_last_seen(uuid):
-
-    if uuid not in PC_MONITOR:
-        return 0
-
-    return PC_MONITOR[uuid]["last_seen"]
+    return PC_MONITOR[uuid]["guest_id"]
 
 
 def get_monitor_play_time(uuid):
 
     if uuid not in PC_MONITOR:
+
         return "-"
 
     start_time = PC_MONITOR[uuid]["date_start"]
 
     if start_time is None:
+
         return "-"
 
     try:
@@ -105,29 +106,6 @@ def get_monitor_play_time(uuid):
         return "-"
 
 
-def get_pc_by_uuid(uuid):
-
-    return PC_MONITOR.get(uuid)
-
-
-def get_all_pcs():
-
-    return PC_MONITOR
-
-
-def get_all_zones():
-
-    zones = {}
-
-    for pc in PC_MONITOR.values():
-
-        if pc["type_id"] not in zones:
-
-            zones[pc["type_id"]] = pc["zone_name"]
-
-    return zones
-
-
 async def monitor_pcs():
 
     while True:
@@ -140,18 +118,21 @@ async def monitor_pcs():
 
             sessions_data = get_guest_sessions()
 
-            # Сбрасываем только сессионные статусы
+            # сбрасываем игровые сессии
             for uuid in PC_MONITOR:
 
+                PC_MONITOR[uuid]["session_state"] = False
+
+                PC_MONITOR[uuid]["guest_id"] = None
+
+                PC_MONITOR[uuid]["date_start"] = None
+
+                # статус session сбрасываем
                 if PC_MONITOR[uuid]["status"] == "session":
 
                     PC_MONITOR[uuid]["status"] = "free"
 
-                    PC_MONITOR[uuid]["guest_id"] = None
-
-                    PC_MONITOR[uuid]["date_start"] = None
-
-            # Обновляем список ПК
+            # обновляем список ПК
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
@@ -171,17 +152,30 @@ async def monitor_pcs():
                     PC_MONITOR[uuid] = {
 
                         "pc_name": pc["name"],
+
                         "fiscal_name": pc["fiscal_name"],
+
                         "type_id": pc["packets_type_PC"],
+
                         "zone_name": zone_name,
 
                         "guest_id": None,
+
                         "date_start": None,
 
+                        # новые состояния
+                        "session_state": False,
+
+                        "power_state": "online",
+
+                        "mode_state": "normal",
+
+                        "action_state": "none",
+
+                        # старое поле для совместимости
                         "status": "free",
 
                         "last_seen": time.time()
-
                     }
 
                 else:
@@ -196,43 +190,47 @@ async def monitor_pcs():
 
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
-            # Обрабатываем активные сессии
+            # отмечаем игровые сессии
             if sessions_data["status"]:
 
                 for session in sessions_data["data"]:
 
                     if session["date_stop"] is not None:
+
                         continue
 
                     uuid = session["UUID"]
 
                     if uuid not in PC_MONITOR:
+
                         continue
 
-                    # не трогаем техрежим и ручные статусы
-                    if PC_MONITOR[uuid]["status"] in (
-                        "tech",
-                        "manual_unlock",
-                        "poweroff",
-                        "busy"
-                    ):
-                        continue
-
-                    PC_MONITOR[uuid]["status"] = "session"
+                    PC_MONITOR[uuid]["session_state"] = True
 
                     PC_MONITOR[uuid]["guest_id"] = session["guest_id"]
 
                     PC_MONITOR[uuid]["date_start"] = session["date_start"]
 
+                    # статус session только если ПК не в спецрежиме
+                    if PC_MONITOR[uuid]["status"] == "free":
+
+                        PC_MONITOR[uuid]["status"] = "session"
+
             sessions_count = sum(
+
                 1
+
                 for pc in PC_MONITOR.values()
-                if pc["status"] == "session"
+
+                if pc["session_state"]
+
             )
 
             print(
+
                 f"ПК в памяти: {len(PC_MONITOR)} | "
-                f"На сессии: {sessions_count}"
+                f"На игровых сессиях: {sessions_count}"
+
             )
 
         except Exception as e:
