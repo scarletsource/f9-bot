@@ -13,6 +13,7 @@ headers = {
 SESSIONS_CACHE = []
 LAST_UPDATE = 0
 
+
 def get_guest_sessions():
 
     response = requests.get(
@@ -21,6 +22,7 @@ def get_guest_sessions():
     )
 
     return response.json()
+
 
 def get_cached_sessions():
 
@@ -48,42 +50,15 @@ def get_cached_sessions():
     return SESSIONS_CACHE
 
 
-import json
-
-def get_pc_session(uuid):
-
-    sessions = get_cached_sessions()
-
-    for session in sessions:
-
-        if session["date_stop"] is None:
-
-            print(
-                json.dumps(
-                    session,
-                    ensure_ascii=False,
-                    indent=4
-                )
-            )
-
-    return None
-
 def get_busy_pcs():
 
     sessions = get_cached_sessions()
 
     busy = []
 
-    print("АКТИВНЫЕ СЕССИИ:")
-
     for session in sessions:
 
         if session["date_stop"] is None:
-
-            print(
-                session["UUID"],
-                session["guest_id"]
-            )
 
             busy.append(
                 session["UUID"]
@@ -98,12 +73,12 @@ def get_pc_session(uuid):
 
     for session in sessions:
 
-        if session["date_stop"] is None:
+        if (
+            session["UUID"] == uuid
+            and session["date_stop"] is None
+        ):
 
-            print()
-            print("АКТИВНАЯ СЕССИЯ")
-            print(session)
-            print()
+            return session
 
     return None
 
