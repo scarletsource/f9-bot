@@ -1,76 +1,107 @@
 from utils.pc_monitor import (
-    get_monitor_status,
-    get_monitor_guest,
-    get_monitor_play_time,
-    get_monitor_pc_name,
-    get_monitor_zone_name
+    get_pc_by_uuid,
+    get_monitor_play_time
 )
 
 from utils.pc_history import get_history
 
 
-def get_monitor_user(uuid):
+def show_pc_card(uuid):
 
-    guest = get_monitor_guest(uuid)
-
-    if guest is None:
-
-        return "Свободен"
-
-    return f"ID {guest}"
-
-
-def get_status_icon_live(uuid):
-
-    status = get_monitor_status(uuid)
-
-    icons = {
-        "free": "🟢",
-        "session": "🔵",
-        "tech": "🟡",
-        "manual_unlock": "🟣",
-        "busy": "🟠",
-        "poweroff": "🔴",
-        "shutdown": "⚫",
-        "error": "🚨"
-    }
-
-    return icons.get(
-        status,
-        "⚪"
+    pc = get_pc_by_uuid(
+        uuid
     )
 
+    if pc is None:
 
-def get_status_name_live(uuid):
+        return (
+            "❌ Компьютер не найден"
+        )
 
-    status = get_monitor_status(uuid)
+    pc_name = pc["pc_name"]
 
-    names = {
-        "free": "Свободен",
-        "session": "На сессии",
-        "tech": "Техрежим",
-        "manual_unlock": "Ручная разблокировка",
-        "busy": "Выполняется команда",
-        "poweroff": "Выключается",
-        "shutdown": "Выключен",
-        "error": "Ошибка"
+    zone_name = pc["zone_name"]
+
+    guest_id = pc["guest_id"]
+
+    session_state = pc["session_state"]
+
+    power_state = pc["power_state"]
+
+    mode_state = pc["mode_state"]
+
+    action_state = pc["action_state"]
+
+    # ===== Игровая сессия =====
+
+    if session_state:
+
+        session_text = (
+            f"🎮 Да\n"
+            f"👤 ID {guest_id}\n"
+            f"⏳ {get_monitor_play_time(uuid)}"
+        )
+
+    else:
+
+        session_text = "Нет"
+
+    # ===== Питание =====
+
+    power_names = {
+
+        "online": "🟢 Включен",
+
+        "shutdown": "⚫ Выключен",
+
+        "offline": "🔴 Нет связи"
+
     }
 
-    return names.get(
-        status,
+    power_text = power_names.get(
+        power_state,
         "Неизвестно"
     )
 
+    # ===== Режим =====
 
-def show_pc_card(uuid):
+    mode_names = {
 
-    pc_name = get_monitor_pc_name(
-        uuid
+        "normal": "Обычный",
+
+        "tech": "🛠 Техрежим",
+
+        "manual_unlock": "🔓 Ручная разблокировка"
+
+    }
+
+    mode_text = mode_names.get(
+        mode_state,
+        "Неизвестно"
     )
 
-    zone_name = get_monitor_zone_name(
-        uuid
+    # ===== Действие =====
+
+    action_names = {
+
+        "none": "Нет",
+
+        "reboot": "🔄 Перезагрузка",
+
+        "poweroff": "⛔ Выключение",
+
+        "poweron": "⚡ Включение",
+
+        "busy": "🟠 Выполняется команда"
+
+    }
+
+    action_text = action_names.get(
+        action_state,
+        "Нет"
     )
+
+    # ===== История =====
 
     history = get_history(
         uuid
@@ -92,32 +123,34 @@ def show_pc_card(uuid):
 
     except:
 
-        pc_number = str(pc_name)
+        pc_number = str(
+            pc_name
+        )
 
     text = (
 
         f"🖥 <b>ПК-{pc_number}</b>\n\n"
 
-        f"📊 Статус\n"
-        f"{get_status_icon_live(uuid)} "
-        f"{get_status_name_live(uuid)}\n\n"
-
         f"📍 Зона\n"
         f"{zone_name}\n\n"
 
-        f"👤 Пользователь\n"
-        f"{get_monitor_user(uuid)}\n\n"
+        f"🎮 Игровая сессия\n"
+        f"{session_text}\n\n"
 
-        f"⏳ Время игры\n"
-        f"{get_monitor_play_time(uuid)}\n\n"
+        f"⚡ Питание\n"
+        f"{power_text}\n\n"
+
+        f"🛠 Режим\n"
+        f"{mode_text}\n\n"
+
+        f"🔄 Текущее действие\n"
+        f"{action_text}\n\n"
 
         f"📜 История действий\n"
         f"{history_text}\n\n"
 
         f"🆔 UUID\n"
-        f"<code>{uuid}</code>\n\n"
-
-        "━━━━━━━━━━━━━━"
+        f"<code>{uuid}</code>"
 
     )
 
