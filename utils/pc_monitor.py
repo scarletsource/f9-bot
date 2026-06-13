@@ -3,11 +3,10 @@ import time
 
 from langame_api import (
     get_pc_linking,
-    get_busy_pcs
+    get_guest_sessions
 )
 
 PC_MONITOR = {}
-
 
 def get_monitor_status(uuid):
 
@@ -53,41 +52,59 @@ async def monitor_pcs():
 
             data = get_pc_linking()
 
-            busy_pcs = get_busy_pcs()
+            sessions_data = get_guest_sessions()
 
-            print()
-            print("ЗАНЯТЫЕ ПК:")
+            # сбрасываем статусы
+            for uuid in PC_MONITOR:
 
-            for uuid in busy_pcs:
+                PC_MONITOR[uuid]["status"] = "free"
+                PC_MONITOR[uuid]["guest_id"] = None
+                PC_MONITOR[uuid]["date_start"] = None
 
-                print(uuid)
-
-            print()
-
+            # обновляем список ПК
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
 
-                status = "free"
+                if uuid not in PC_MONITOR:
 
-                if uuid in busy_pcs:
+                    PC_MONITOR[uuid] = {
 
-                    status = "session"
+                        "pc_name": pc["name"],
 
-                PC_MONITOR[uuid] = {
+                        "fiscal_name": pc["fiscal_name"],
 
-                    "pc_name": pc["name"],
+                        "guest_id": None,
 
-                    "fiscal_name": pc["fiscal_name"],
+                        "date_start": None,
 
-                    "guest_id": None,
+                        "status": "free",
 
-                    "status": status,
+                        "last_seen": time.time()
+                    }
 
-                    "last_seen": time.time()
-                }
+                else:
 
-            sessions = sum(
+                    PC_MONITOR[uuid]["last_seen"] = time.time()
+
+            # отмечаем активные сессии
+            for session in sessions_data["data"]:
+
+                if session["date_stop"] is not None:
+                    continue
+
+                uuid = session["UUID"]
+
+                if uuid not in PC_MONITOR:
+                    continue
+
+                PC_MONITOR[uuid]["status"] = "session"
+
+                PC_MONITOR[uuid]["guest_id"] = session["guest_id"]
+
+                PC_MONITOR[uuid]["date_start"] = session["date_start"]
+
+            sessions_count = sum(
                 1
                 for pc in PC_MONITOR.values()
                 if pc["status"] == "session"
@@ -95,23 +112,8 @@ async def monitor_pcs():
 
             print(
                 f"ПК в памяти: {len(PC_MONITOR)} | "
-                f"На сессии: {sessions}"
+                f"На сессии: {sessions_count}"
             )
-
-            print()
-            print("МОНИТОР:")
-
-            for uuid, pc in PC_MONITOR.items():
-
-                print(
-                    pc["pc_name"],
-                    "|",
-                    pc["fiscal_name"],
-                    "|",
-                    pc["status"]
-                )
-
-            print()
 
         except Exception as e:
 
