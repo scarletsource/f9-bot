@@ -10,6 +10,20 @@ from langame_api import (
 
 PC_MONITOR = {}
 
+def set_monitor_status(uuid, status):
+
+    if uuid not in PC_MONITOR:
+        return
+
+    PC_MONITOR[uuid]["status"] = status
+
+def get_monitor_last_seen(uuid):
+
+    if uuid not in PC_MONITOR:
+
+        return 0
+
+    return PC_MONITOR[uuid]["last_seen"]
 
 def get_monitor_status(uuid):
 
