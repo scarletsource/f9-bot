@@ -8,7 +8,15 @@ headers = {
     "X-Api-Key": API_KEY
 }
 
+def get_guest_sessions():
 
+    response = requests.get(
+        f"{BASE_URL}/guests/sessions",
+        headers=headers
+    )
+
+    return response.json()
+    
 def get_clubs():
 
     response = requests.get(
