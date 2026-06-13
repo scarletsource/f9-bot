@@ -165,4 +165,15 @@ def get_all_operations_log():
         "status_code": response.status_code,
         "text": response.text
     }
-    
+
+def get_working_shifts():
+
+    response = requests.get(
+        f"{BASE_URL}/working_shifts/list",
+        headers=headers
+    )
+
+    return {
+        "status_code": response.status_code,
+        "text": response.text
+    }
