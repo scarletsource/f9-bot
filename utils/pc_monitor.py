@@ -10,28 +10,6 @@ from langame_api import (
 
 PC_MONITOR = {}
 
-def get_pc_by_uuid(uuid):
-
-    if uuid not in PC_MONITOR:
-
-        return None
-
-    return PC_MONITOR[uuid]
-
-def set_monitor_status(uuid, status):
-
-    if uuid not in PC_MONITOR:
-        return
-
-    PC_MONITOR[uuid]["status"] = status
-
-def get_monitor_last_seen(uuid):
-
-    if uuid not in PC_MONITOR:
-
-        return 0
-
-    return PC_MONITOR[uuid]["last_seen"]
 
 def get_monitor_status(uuid):
 
@@ -39,6 +17,14 @@ def get_monitor_status(uuid):
         return "shutdown"
 
     return PC_MONITOR[uuid]["status"]
+
+
+def set_monitor_status(uuid, status):
+
+    if uuid not in PC_MONITOR:
+        return
+
+    PC_MONITOR[uuid]["status"] = status
 
 
 def get_monitor_guest(uuid):
@@ -81,14 +67,6 @@ def get_monitor_type(uuid):
     return PC_MONITOR[uuid]["type_id"]
 
 
-def get_monitor_start_time(uuid):
-
-    if uuid not in PC_MONITOR:
-        return "-"
-
-    return PC_MONITOR[uuid]["date_start"]
-
-
 def get_monitor_play_time(uuid):
 
     if uuid not in PC_MONITOR:
@@ -119,6 +97,41 @@ def get_monitor_play_time(uuid):
         return "-"
 
 
+def get_monitor_last_seen(uuid):
+
+    if uuid not in PC_MONITOR:
+        return 0
+
+    return PC_MONITOR[uuid]["last_seen"]
+
+
+def get_pc_by_uuid(uuid):
+
+    return PC_MONITOR.get(uuid)
+
+
+def get_all_pcs():
+
+    return PC_MONITOR
+
+
+def get_all_zones():
+
+    zones = {}
+
+    for pc in PC_MONITOR.values():
+
+        type_id = pc["type_id"]
+
+        zone_name = pc["zone_name"]
+
+        if type_id not in zones:
+
+            zones[type_id] = zone_name
+
+    return zones
+
+
 async def monitor_pcs():
 
     while True:
@@ -134,11 +147,13 @@ async def monitor_pcs():
             # Сбрасываем статусы
             for uuid in PC_MONITOR:
 
-                PC_MONITOR[uuid]["status"] = "free"
+                if PC_MONITOR[uuid]["status"] == "session":
 
-                PC_MONITOR[uuid]["guest_id"] = None
+                    PC_MONITOR[uuid]["status"] = "free"
 
-                PC_MONITOR[uuid]["date_start"] = None
+                    PC_MONITOR[uuid]["guest_id"] = None
+
+                    PC_MONITOR[uuid]["date_start"] = None
 
             # Обновляем список ПК
             for pc in data["data"]:
@@ -160,15 +175,11 @@ async def monitor_pcs():
                     PC_MONITOR[uuid] = {
 
                         "pc_name": pc["name"],
-
                         "fiscal_name": pc["fiscal_name"],
-
                         "type_id": pc["packets_type_PC"],
-
                         "zone_name": zone_name,
 
                         "guest_id": None,
-
                         "date_start": None,
 
                         "status": "free",
@@ -188,7 +199,7 @@ async def monitor_pcs():
 
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
-            # Отмечаем активные сессии
+            # Активные сессии
             if sessions_data["status"]:
 
                 for session in sessions_data["data"]:
@@ -226,23 +237,3 @@ async def monitor_pcs():
             )
 
         await asyncio.sleep(5)
-
-def get_all_pcs():
-
-    return PC_MONITOR
-
-def get_all_zones():
-
-    zones = {}
-
-    for pc in PC_MONITOR.values():
-
-        type_id = pc["type_id"]
-
-        zone_name = pc["zone_name"]
-
-        if type_id not in zones:
-
-            zones[type_id] = zone_name
-
-    return zones
