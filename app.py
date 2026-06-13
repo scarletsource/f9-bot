@@ -354,6 +354,8 @@ async def confirm_action(callback: CallbackQuery):
         f"Действие:\n{names[action]}",
         reply_markup=result_menu()
     )
+    await callback.answer()
+
 @dp.callback_query(lambda c: c.data == "cancel_action")
 async def cancel_action(callback: CallbackQuery):
 
