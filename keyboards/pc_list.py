@@ -13,7 +13,7 @@ def pc_list_menu(pcs):
         )
 
         builder.button(
-            text=f"{icon} ПК-{pc['name']:0>2}"
+            text=f"{icon} ПК-{int(pc['name']):02}",
             callback_data=f"pcid_{pc['UUID']}"
         )
 
