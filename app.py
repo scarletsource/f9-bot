@@ -86,12 +86,14 @@ async def guestlogs(message: Message):
             indent=4
         )
 
-    await message.answer_document(
-        FSInputFile(
-            "guest_logs.json"
-        )
+    file = FSInputFile(
+        "guest_logs.json"
     )
 
+    await message.answer_document(
+        file
+    )
+    
 @dp.message(Command("checkpc"))
 async def checkpc(message: Message):
 
