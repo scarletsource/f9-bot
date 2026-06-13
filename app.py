@@ -24,7 +24,9 @@ from utils.pc_status import (
     set_status,
     get_status,
     get_status_icon,
-    get_status_name
+    get_status_name,
+    get_pc_user,
+    get_pc_play_time
 )
 
 from utils.pc_history import (
