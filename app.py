@@ -17,6 +17,7 @@ from langame_api import (
     get_pc_types,
     get_pc_linking,
     get_adminconsole,
+    get_all_operations_log,
     get_guest_logs
 )
 
@@ -64,6 +65,34 @@ async def start(message: Message):
         "👋 Добро пожаловать в F9 Кибер Арена\n\n"
         "Выберите раздел:",
         reply_markup=main_menu()
+    )
+
+@dp.message(Command("operations"))
+async def operations(message: Message):
+
+    data = get_all_operations_log()
+
+    import json
+
+    with open(
+        "operations.json",
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            ensure_ascii=False,
+            indent=4
+        )
+
+    file = FSInputFile(
+        "operations.json"
+    )
+
+    await message.answer_document(
+        file
     )
 
 @dp.message(Command("guestlogs"))
