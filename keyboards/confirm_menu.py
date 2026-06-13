@@ -1,7 +1,7 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def confirm_menu():
+def confirm_menu(action, uuid):
 
     builder = InlineKeyboardBuilder()
 
