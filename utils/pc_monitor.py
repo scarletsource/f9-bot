@@ -67,6 +67,14 @@ def get_monitor_type(uuid):
     return PC_MONITOR[uuid]["type_id"]
 
 
+def get_monitor_last_seen(uuid):
+
+    if uuid not in PC_MONITOR:
+        return 0
+
+    return PC_MONITOR[uuid]["last_seen"]
+
+
 def get_monitor_play_time(uuid):
 
     if uuid not in PC_MONITOR:
@@ -97,14 +105,6 @@ def get_monitor_play_time(uuid):
         return "-"
 
 
-def get_monitor_last_seen(uuid):
-
-    if uuid not in PC_MONITOR:
-        return 0
-
-    return PC_MONITOR[uuid]["last_seen"]
-
-
 def get_pc_by_uuid(uuid):
 
     return PC_MONITOR.get(uuid)
@@ -121,13 +121,9 @@ def get_all_zones():
 
     for pc in PC_MONITOR.values():
 
-        type_id = pc["type_id"]
+        if pc["type_id"] not in zones:
 
-        zone_name = pc["zone_name"]
-
-        if type_id not in zones:
-
-            zones[type_id] = zone_name
+            zones[pc["type_id"]] = pc["zone_name"]
 
     return zones
 
@@ -144,21 +140,7 @@ async def monitor_pcs():
 
             sessions_data = get_guest_sessions()
 
-            print()
-print("===== АКТИВНЫЕ СЕССИИ =====")
-
-for session in sessions_data["data"]:
-
-    if session["date_stop"] is None:
-
-        print(
-            session["UUID"],
-            session["guest_id"]
-        )
-
-print()
-            
-            # Сбрасываем статусы
+            # Сбрасываем только сессионные статусы
             for uuid in PC_MONITOR:
 
                 if PC_MONITOR[uuid]["status"] == "session":
@@ -199,6 +181,7 @@ print()
                         "status": "free",
 
                         "last_seen": time.time()
+
                     }
 
                 else:
@@ -213,7 +196,7 @@ print()
 
                     PC_MONITOR[uuid]["last_seen"] = time.time()
 
-            # Активные сессии
+            # Обрабатываем активные сессии
             if sessions_data["status"]:
 
                 for session in sessions_data["data"]:
@@ -224,6 +207,15 @@ print()
                     uuid = session["UUID"]
 
                     if uuid not in PC_MONITOR:
+                        continue
+
+                    # не трогаем техрежим и ручные статусы
+                    if PC_MONITOR[uuid]["status"] in (
+                        "tech",
+                        "manual_unlock",
+                        "poweroff",
+                        "busy"
+                    ):
                         continue
 
                     PC_MONITOR[uuid]["status"] = "session"
@@ -250,19 +242,4 @@ print()
                 e
             )
 
-print()
-print("===== СТАТУСЫ ПК =====")
-
-for uuid, pc in PC_MONITOR.items():
-
-    print(
-        pc["pc_name"],
-        "|",
-        pc["status"],
-        "|",
-        pc["guest_id"]
-    )
-
-print()
-        
         await asyncio.sleep(5)
