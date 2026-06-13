@@ -74,15 +74,9 @@ async def testpc(message: Message):
 
     data = get_pc_linking()
 
-    for pc in data["data"]:
-
-        if pc["name"] == "НОМЕР_ПРОБЛЕМНОГО_ПК":
-
-            await message.answer(
-                str(pc)
-            )
-
-            break
+    await message.answer(
+        str(data["data"][0])
+    )
 
 @dp.message(Command("sessions"))
 async def sessions(message: Message):
