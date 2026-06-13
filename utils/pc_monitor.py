@@ -2,6 +2,7 @@ import asyncio
 import time
 
 from langame_api import get_pc_linking
+from langame_api import get_busy_pcs
 
 PC_MONITOR = {}
 
@@ -23,19 +24,39 @@ async def monitor_pcs():
 
             data = get_pc_linking()
 
+            busy_pcs = get_busy_pcs()
+
             for pc in data["data"]:
 
                 uuid = pc["UUID"]
 
+                status = "free"
+
+                if uuid in busy_pcs:
+
+                    status = "session"
+
                 PC_MONITOR[uuid] = {
-                    "status": "free",
+                    "status": status,
                     "last_seen": time.time()
                 }
 
-            print("ПК в памяти:", len(PC_MONITOR))
+            sessions = sum(
+                1
+                for pc in PC_MONITOR.values()
+                if pc["status"] == "session"
+            )
+
+            print(
+                f"ПК в памяти: {len(PC_MONITOR)} | "
+                f"На сессии: {sessions}"
+            )
 
         except Exception as e:
 
-            print("ОШИБКА МОНИТОРА:", e)
+            print(
+                "ОШИБКА МОНИТОРА:",
+                e
+            )
 
         await asyncio.sleep(5)
