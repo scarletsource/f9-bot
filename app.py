@@ -14,8 +14,6 @@ from langame_api import (
     get_clubs,
     get_products,
     pc_manage,
-    get_pc_types,
-    get_pc_linking,
     get_adminconsole,
     get_all_operations_log,
     get_guest_logs,
@@ -295,9 +293,7 @@ async def confirm_action(
     callback: CallbackQuery
 ):
 
-    data = callback.data.split(
-        "_"
-    )
+    data = callback.data.split("_")
 
     action = data[1]
 
@@ -375,23 +371,28 @@ async def confirm_action(
             "busy"
         )
 
+    # Отправляем команду в LANGame
     response = pc_manage(
         commands[action],
         uuid
     )
 
+    # Сохраняем историю ПК
     add_history(
         uuid,
         names[action]
     )
 
+    # Получаем номер ПК из монитора
     pc_name = get_monitor_pc_name(
         uuid
     )
 
     try:
 
-        pc_number = int(pc_name)
+        pc_number = int(
+            pc_name
+        )
 
     except:
 
@@ -408,11 +409,9 @@ async def confirm_action(
     }
 
     add_club_history(
-
         club_names[action].format(
             pc_number
         )
-
     )
 
     await callback.message.edit_text(
@@ -422,7 +421,6 @@ async def confirm_action(
     )
 
     await callback.answer()
-
 
 @dp.callback_query(
     lambda c: c.data == "cancel_action"
