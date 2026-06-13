@@ -32,9 +32,6 @@ from keyboards.pc_list import pc_list_menu
 from keyboards.pc_actions import pc_actions_menu
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CURRENT_UUID = ""
-CURRENT_COMMAND = ""
-CURRENT_ACTION_NAME = ""
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -150,50 +147,31 @@ async def pc_selected(callback: CallbackQuery):
 
     await callback.answer()
 
-@dp.callback_query(
-    lambda c:
-    c.data in [
-        "reboot",
-        "poweron",
-        "lock",
-        "unlock",
-        "poweroff",
-        "techstart",
-        "techstop"
-    ]
-)
+@dp.callback_query(lambda c: c.data.startswith("action_"))
 async def pc_action(callback: CallbackQuery):
 
-    global CURRENT_COMMAND
-    global CURRENT_ACTION_NAME
+    data = callback.data.split("_")
 
-    commands = {
-        "reboot": "reboot",
-        "poweron": "power_on",
-        "lock": "lock",
-        "unlock": "unlock",
-        "poweroff": "power_off",
-        "techstart": "tech_start",
-        "techstop": "tech_stop"
-    }
+    action = data[1]
+    uuid = "_".join(data[2:])
 
     names = {
         "reboot": "🔄 Перезагрузка",
         "poweron": "⚡ Включение",
         "lock": "🔒 Блокировка",
-        "unlock": "🔓 Разблокировка",
+        "unlock": "🔓 Ручная разблокировка",
         "poweroff": "⛔ Выключение",
         "techstart": "🛠 Тех старт",
         "techstop": "🛠 Тех стоп"
     }
 
-    CURRENT_COMMAND = commands[callback.data]
-    CURRENT_ACTION_NAME = names[callback.data]
-
     await callback.message.edit_text(
         f"⚠ Подтвердите действие\n\n"
-        f"{CURRENT_ACTION_NAME}",
-        reply_markup=confirm_menu()
+        f"{names[action]}",
+        reply_markup=confirm_menu(
+            action,
+            uuid
+        )
     )
 
     await callback.answer()
