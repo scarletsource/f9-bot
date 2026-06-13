@@ -12,6 +12,14 @@ headers = {
 SESSIONS_CACHE = []
 LAST_UPDATE = 0
 
+def get_guest_logs():
+
+    response = requests.get(
+        f"{BASE_URL}/guests/logs",
+        headers=headers
+    )
+
+    return response.json()
 
 def get_guest_sessions():
 
