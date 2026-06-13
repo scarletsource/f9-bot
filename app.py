@@ -166,13 +166,13 @@ async def pc_action(callback: CallbackQuery):
     }
 
     await callback.message.edit_text(
-        f"⚠ Подтвердите действие\n\n"
-        f"{names[action]}",
-        reply_markup=confirm_menu(
-            action,
-            uuid
-        )
+    f"⚠ Подтвердите действие\n\n"
+    f"{names[action]}",
+    reply_markup=confirm_menu(
+        action,
+        uuid
     )
+)
 
     await callback.answer()
 
