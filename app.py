@@ -140,10 +140,23 @@ async def pc_selected(callback: CallbackQuery):
         ""
     )
 
-    await callback.message.edit_text(
-        "🖥 Выберите действие:",
-        reply_markup=pc_actions_menu(uuid)
-    )
+    text = (
+    "🖥 <b>Управление компьютерами</b>\n\n"
+    "🟢 Свободен\n"
+    "🟣 Ручная разблокировка\n"
+    "🟡 Техрежим\n"
+    "🔴 Выключен\n"
+    "🟠 Выполняется команда\n"
+    "⚫ Недоступен\n\n"
+    "━━━━━━━━━━━━━━\n\n"
+    "Выберите компьютер:"
+)
+
+await callback.message.edit_text(
+    text,
+    reply_markup=pc_list_menu(pcs),
+    parse_mode="HTML"
+)
 
     await callback.answer()
 
