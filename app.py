@@ -68,7 +68,22 @@ async def start(message: Message):
         "Выберите раздел:",
         reply_markup=main_menu()
     )
-    
+
+@dp.message(Command("testpc"))
+async def testpc(message: Message):
+
+    data = get_pc_linking()
+
+    for pc in data["data"]:
+
+        if pc["name"] == "НОМЕР_ПРОБЛЕМНОГО_ПК":
+
+            await message.answer(
+                str(pc)
+            )
+
+            break
+
 @dp.message(Command("sessions"))
 async def sessions(message: Message):
 
