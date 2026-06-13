@@ -36,19 +36,20 @@ async def monitor_pcs():
             
             for pc in data["data"]:
 
-                uuid = pc["UUID"]
+    uuid = pc["UUID"]
 
-                status = "free"
+    status = "free"
 
-                if uuid in busy_pcs:
+    if uuid in busy_pcs:
+        status = "session"
 
-                    status = "session"
-
-                PC_MONITOR[uuid] = {
-                    "status": status,
-                    "last_seen": time.time()
-                }
-
+    PC_MONITOR[uuid] = {
+        "pc_name": pc["name"],
+        "fiscal_name": pc["fiscal_name"],
+        "guest_id": None,
+        "status": status,
+        "last_seen": time.time()
+    }
             sessions = sum(
                 1
                 for pc in PC_MONITOR.values()
@@ -66,5 +67,20 @@ async def monitor_pcs():
                 "ОШИБКА МОНИТОРА:",
                 e
             )
+
+print()
+print("МОНИТОР:")
+
+for uuid, pc in PC_MONITOR.items():
+
+    print(
+        pc["pc_name"],
+        "|",
+        pc["fiscal_name"],
+        "|",
+        pc["status"]
+    )
+
+print()
 
         await asyncio.sleep(5)
